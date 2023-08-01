@@ -6,13 +6,13 @@ from django.utils.translation import gettext_lazy as _
 class user_details(AbstractUser):
     phone_number = models.CharField(max_length=50)
     email = models.EmailField(unique=True)
-    username = models.CharField(max_length=150)
+    # username = models.CharField(max_length=150,unique=True)
     is_verified = models.BooleanField(default=False)
 
     def __str__(self):
         return self.email
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['phone_number','first_name']
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = []
     
     
     groups = models.ManyToManyField(
@@ -24,4 +24,3 @@ class user_details(AbstractUser):
         'auth.Permission',
         related_name='customuser_user_permissions',
     )
-    

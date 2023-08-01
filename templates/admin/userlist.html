@@ -1,0 +1,49 @@
+{% extends 'admin/admbase.html' %}
+{% block title %}User List{% endblock title %}
+{% block body %}
+<div class="container mt-4">
+    <h2>User Details</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>User Name</th>
+                <th>Email ID</th>
+                <th>Phone Number</th>
+                <th>Is Active</th>
+                <th>block/unblock</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in s %}
+            <tr>
+                <td><a href="/viewuser/{{ i.id }}">{{ i.id }}</a></td>
+                <td>{{ i.username }}</td>
+                <td>{{ i.email }}</td>
+                <td>{{ i.phone_number }}</td>
+                <td>{{ i.is_active }}</td>
+                <td>
+
+                    {%if i.is_active %}  
+
+                      <a href="blockuser/{{i.id}}" data-toggle="modal" data-target="#exampleModal1{{i.id}}" >
+                        <button style="font-size:13px ;" type="button" class="btn btn-light">Block</button>
+                      </a>
+
+
+                    {%else%}
+
+                    <a href="unblockuser/{{i.id}}"  data-toggle="modal" data-target="#exampleModal2{{i.id}}" >
+                      <button style="font-size:13px ;" type="button" class="btn btn-light">Unblock</button>
+                    </a>
+
+                    {% endif %}
+
+                    </td> 
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock body %}

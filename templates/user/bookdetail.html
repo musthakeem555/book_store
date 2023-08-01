@@ -1,0 +1,44 @@
+{% extends 'user/base.html' %}
+{% load static %}
+{% block content %}
+<section class="sec-product-detail bg0 p-t-65 p-b-60"> 
+	<div class="container">
+		<div class="row">
+    <div class="col-md-6 col-lg-7 p-b-30">
+        <div class="p-l-25 p-r-30 p-lr-0-lg">
+            <div class="wrap-pic-w pos-relative d-flex justify-content-center"> <!-- Add d-flex and justify-content-center classes to center the image -->
+				<img src="{{ book.cover_image.url }}" alt="Book Cover Image" class="img-fluid" style="max-height: 400px; width: auto;">
+				<!-- Adjust max-height value as needed -->
+				<!-- Width will automatically adjust based on the aspect ratio -->
+				
+			</div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-5 p-b-30">
+        <div class="p-r-50 p-t-5 p-lr-0-lg">
+            <h4 class="mtext-105 cl2 js-name-detail p-b-14">
+                {{ book.title }}
+            </h4>
+
+            <span class="mtext-106 cl2">
+                ${{ book.price }}
+            </span>
+
+            <p class="stext-102 cl3 p-t-23">
+                {{ book.description }}
+            </p>
+            
+            <!--  -->
+            <div class="p-t-33">
+                <button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
+                    Add to cart
+                </button>
+            </div>    
+        </div>
+    </div>
+</div>
+
+	</div>
+</section>
+{% endblock  %}

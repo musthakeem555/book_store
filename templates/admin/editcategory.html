@@ -1,0 +1,37 @@
+{% extends 'admin/admbase.html' %}
+{% load static %}
+
+{% block title %}Update Category Details{% endblock title %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-4">
+                <h2 class="text-center text-white bg-dark p-2">
+                    Update Category Details
+                </h2>
+                <br />
+                <form action="{% url 'editcategory' d.id %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input
+                            type="text"
+                            class="form-control"
+                            placeholder="Enter the category name"
+                            name="name"
+                            value="{{ d.name }}"
+                            required
+                        />
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-dark mt-3" type="submit">Update</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-8">
+                <!-- Add any additional content here if needed -->
+            </div>
+        </div>
+    </div>
+{% endblock body %}

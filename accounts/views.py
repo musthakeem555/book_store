@@ -22,7 +22,6 @@ def signup(request):
        password=request.POST.get('password')
        password2=request.POST.get('password1')
        print('phone===',phone_number)
-       from . import verify
 
 
        if password==password2:
@@ -43,7 +42,7 @@ def signup(request):
                 return redirect(signup)
             
             else:
-                myuser=user_details.objects.create(first_name=first_name,email=email,phone_number=phone_number)
+                myuser=user_details.objects.create(username=first_name,email=email,phone_number=phone_number)
                 myuser.set_password(password)
                 myuser.save()
                 verify.send(myuser.phone_number)
@@ -93,6 +92,22 @@ def user_login(request):
             messages.error(request, 'Invalid email or password.')
 
     return render(request, 'auth/login.html')
+
+def admin_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None and user.is_superuser:
+            auth_login(request, user)
+            return redirect('home')  # Replace 'dashboard' with the URL name of your superuser dashboard page
+        else:
+            # Add an error message to display on the login page (optional but recommended)
+            error_message = "Invalid username or password."
+            return render(request, 'admlogin.html', {'error_message': error_message})
+
+    return render(request, 'auth/admlogin.html')
 
     # return render(request,'auth/login.html')
    
