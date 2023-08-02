@@ -8,6 +8,9 @@ from django.contrib.auth.decorators import login_required
 from .models import user_details
 from . import verify
 from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import never_cache
 
 # Create your views here.
 def signup(request):
@@ -65,7 +68,7 @@ def otp_verify(request,id,phone):
         code = request.POST.get("otp")
         if verify.check(phone, code):
             user = user_details.objects.filter(id=id).update(is_verified=True)
-            return redirect("home")
+            return redirect("login")
         else:
             user = user_details.objects.get(id=id)
             user.delete()
@@ -92,8 +95,10 @@ def user_login(request):
             messages.error(request, 'Invalid email or password.')
 
     return render(request, 'auth/login.html')
-
+@never_cache
 def admin_login(request):
+    if request.user.is_authenticated and request.user.is_superuser:
+        return redirect('userlist')
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -101,13 +106,15 @@ def admin_login(request):
 
         if user is not None and user.is_superuser:
             auth_login(request, user)
-            return redirect('home')  # Replace 'dashboard' with the URL name of your superuser dashboard page
+            return redirect('userlist')  # Replace 'dashboard' with the URL name of your superuser dashboard page
         else:
             # Add an error message to display on the login page (optional but recommended)
             error_message = "Invalid username or password."
-            return render(request, 'admlogin.html', {'error_message': error_message})
+            return render(request, 'auth/admlogin.html', {'error_message': error_message})
 
     return render(request, 'auth/admlogin.html')
 
     # return render(request,'auth/login.html')
-   
+def admlogout(request):
+    logout(request) 
+    return redirect('admlogin')

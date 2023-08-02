@@ -36,6 +36,7 @@
 	<link rel="stylesheet" type="text/css" href="{% static 'css/util.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
 <!--===============================================================================================-->
+{% block additional_css %}{% endblock %}
 </head>
 <body class="animsition">
 	
@@ -551,7 +552,8 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 			</div>
 		</div>
 	</div>
-
+	{% block style %}{% endblock %}
+	
 <!--===============================================================================================-->	
 <script src="{% static 'vendor/jquery/jquery-3.2.1.min.js' %}"></script>
 <!--===============================================================================================-->
@@ -597,7 +599,8 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 <!--===============================================================================================-->
 	<script src="{% static 'vendor/isotope/isotope.pkgd.min.js' %}"></script>
 <!--===============================================================================================-->
-	<script src="{% static 'vendor/sweetalert/sweetalert.min.js' %}"></script>
+	<script 
+</html>src="{% static 'vendor/sweetalert/sweetalert.min.js' %}"></script>
 	<script>
 		$('.js-addwish-b2').on('click', function(e){
 			e.preventDefault();
@@ -655,4 +658,3 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	<script src="{% static 'user/js/main.js' %}"></script>
 
 </body>
-</html>

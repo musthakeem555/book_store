@@ -620,12 +620,16 @@
 		<div class="container">
 			<div class="signin-content">
 				<div class="signin-image">
-					<figure><img src="https://www.freepik.com/free-vector/hand-drawn-flat-design-stack-books_24372889.htm#query=book%20illustration&position=39&from_view=keyword&track=ais" alt="sing up image"></figure>
-					<a href="register" class="signup-image-link">Create an account</a>
+					<figure>
+						<!-- Replace the image URL with the correct path to your "reading.jpg" image in the "book_covers" folder -->
+						<img src="{% static 'images/book_covers/reading.jpg' %}" alt="sing up image">
+					</figure>
+					
+					
 				</div>
 
 				<div class="signin-form">
-					<h2 class="form-title">Sign in</h2>
+					<h2 class="form-title">Login</h2>
 					<form method="POST" class="register-form" id="login-form">
 
 
@@ -644,15 +648,19 @@
 							<input type="checkbox" name="remember-me" id="remember-me" class="agree-term" />
 							<label for="remember-me" class="label-agree-term"><span><span></span></span>Remember me</label>
 						</div> {% endcomment %}
-						<div class="form-group form-button">
+						{% comment %} <div class="form-group form-button">
 							<input type="submit" name="signin" id="signin" class="form-submit" value="Log in"/>
+							<a href="signup" class="signup-image-link">Create an account</a>
+						</div> {% endcomment %}
+						<div class="d-flex justify-content-center">
+							<button type="submit" class="btn btn-primary mt-4" style="width: 400px;">login</button>
+						</div>
+						<div>
+							<a href="signup" class="signup-image-link mt-2" style="position: relative; right: 140px;">Create an account</a>
 						</div>
 					</form>
 					<div class="social-login">
-						<span class="social-label">Or login with</span>
-						<ul class="socials">
-						<a href="/admins/number_check">Phone Number</a>
-						</ul>	
+						
 						<!-- <ul class="socials">
 							<li><a href="#"><i class="zmdi zmdi-phone"></i></a></li>
 							<li><a href="#"><i class="display-flex-center zmdi zmdi-twitter"></i></a></li>

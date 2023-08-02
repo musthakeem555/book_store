@@ -6,16 +6,18 @@ from .models import Category
 from django.http import HttpResponse
 from .models import Book
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import never_cache
 
 def admhome(request):
     return render(request,'admin/admbase.html')
-
+@login_required
 def userlist(request):
-    # if request.user.is_authenticated and request.user.is_superuser == True:
+    if request.user.is_authenticated and request.user.is_superuser == True:
         k = user_details.objects.exclude(is_superuser=True).order_by("id")
         return render(request, "admin/userlist.html", {"s": k})
-    # else:
-    #     return render(request, "adminside/adminlogin.html")
+    else:
+        return render(request, "adminside/adminlogin.html")
 # Create your views here.
 def blockuser(request,id):
     user=user_details.objects.get(id=id)
@@ -35,12 +37,7 @@ def add_category(request):
         return render(request,'admin/addcategory.html')
     if request.method == 'POST':
         category_name=request.POST.get('category_name')
-        # img1=request.FILES['image'] 
-        # category_name1=category_name[:-1]
-        # test_string = 'category_name'
-        # matched = re.match("[/b"+category_name+"/b]", test_string)
-        # is_match = bool(matched)
-        # print(is_match)
+        
         
         if Category.objects.filter(name__icontains=category_name):
             messages.info(request,"Category Exist")
@@ -52,7 +49,7 @@ def add_category(request):
         cat=Category.objects.create(name=category_name)
         cat.save()
         return redirect ('addcategory')
-    
+@login_required   
 def categorylist(request):
     # if request.user.is_superuser:
         Categories=Category.objects.all()
@@ -98,7 +95,7 @@ def addbook(request):
     else:
         categories = Category.objects.all()
         return render(request, 'admin/addbook.html', {'categories': categories})
-
+@login_required
 def admbooklist(request):
     books = Book.objects.all()
     return render(request, 'admin/admbooklist.html', {'books': books})    

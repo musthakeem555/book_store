@@ -23,5 +23,6 @@ urlpatterns = [
     # path('otpverify',views.otp_verify,name='otpverify'),
     path('otpverify/<str:phone>,<int:id>',views.otp_verify,name='otpverify'),
     path('login',views.user_login,name='login'),
-    path('admlogin',views.admin_login,name='admlogin')
+    path('admlogin',views.admin_login,name='admlogin'),
+    path('admlogout',views.admlogout,name='admlogout')
 ]
