@@ -47,16 +47,14 @@
 			<!-- Topbar -->
 			<div class="top-bar">
 				<div class="content-topbar flex-sb-m h-full container">
-					<div class="left-top-bar">
-						Free shipping for standard order over $100
-					</div>
+					
 
 					<div class="right-top-bar flex-w h-full">
 						<a href="#" class="flex-c-m trans-04 p-lr-25">
 							Help & FAQs
 						</a>
 
-						<a href="#" class="flex-c-m trans-04 p-lr-25">
+						<a href="login" class="flex-c-m trans-04 p-lr-25">
 							My Account
 						</a>
 
@@ -75,9 +73,9 @@
 				<nav class="limiter-menu-desktop container">
 					
 					<!-- Logo desktop -->		
-					<a href="#" class="logo">
+					{% comment %} <a href="#" class="logo">
 						<img src="{% static 'user/images/icons/logo-01.png' %}" alt="IMG-LOGO">
-					</a>
+					</a> {% endcomment %}
 
 					<!-- Menu desktop -->
 					<div class="menu-desktop">
@@ -99,9 +97,6 @@
 								<a href="{% static 'user/shoping-cart.html' %}">Features</a>
 							</li>
 
-							<li>
-								<a href="{% static 'user/blog.html' %}">Blog</a>
-							</li>
 
 							<li>
 								<a href="{% static 'user/about.html' %}">About</a>
@@ -165,11 +160,6 @@
 		<!-- Menu Mobile -->
 		<div class="menu-mobile">
 			<ul class="topbar-mobile">
-				<li>
-					<div class="left-top-bar">
-						Free shipping for standard order over $100
-					</div>
-				</li>
 
 				<li>
 					<div class="right-top-bar flex-w h-full">
@@ -177,17 +167,11 @@
 							Help & FAQs
 						</a>
 
-						<a href="#" class="flex-c-m p-lr-10 trans-04">
+						<a href="" class="flex-c-m p-lr-10 trans-04">
 							My Account
 						</a>
 
-						<a href="#" class="flex-c-m p-lr-10 trans-04">
-							EN
-						</a>
-
-						<a href="#" class="flex-c-m p-lr-10 trans-04">
-							USD
-						</a>
+						
 					</div>
 				</li>
 			</ul>
@@ -206,10 +190,6 @@
 
 				<li>
 					<a href="{% static 'user/shoping-cart.html' %}" class="label1 rs1" data-label1="hot">Features</a>
-				</li>
-
-				<li>
-					<a href="{% static 'user/blog.html' %}">Blog</a>
 				</li>
 
 				<li>
@@ -338,27 +318,10 @@
 					</div>
 				</div>
 
-				<div class="col-sm-6 col-lg-3 p-b-50">
-					<h4 class="stext-301 cl0 p-b-30">
-						Newsletter
-					</h4>
-
-					<form>
-						<div class="wrap-input1 w-full p-b-4">
-							<input class="input1 bg-none plh1 stext-107 cl7" type="text" name="email" placeholder="email@example.com">
-							<div class="focus-input1 trans-04"></div>
-						</div>
-
-						<div class="p-t-18">
-							<button class="flex-c-m stext-101 cl0 size-103 bg1 bor1 hov-btn2 p-lr-15 trans-04">
-								Subscribe
-							</button>
-						</div>
-					</form>
-				</div>
+				
 			</div>
 
-			<div class="p-t
+			<div class="p-t">
 				<div class="flex-c-m flex-w p-b-18">
 					<a href="#" class="m-all-1">
 						<img src="{% static 'images/icons/icon-pay-01.png' %}" alt="ICON-PAY">
@@ -486,24 +449,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 									</div>
 								</div>
 
-								<div class="flex-w flex-r-m p-b-10">
-									<div class="size-203 flex-c-m respon6">
-										Color
-									</div>
-
-									<div class="size-204 respon6-next">
-										<div class="rs1-select2 bor8 bg0">
-											<select class="js-select2" name="time">
-												<option>Choose an option</option>
-												<option>Red</option>
-												<option>Blue</option>
-												<option>White</option>
-												<option>Grey</option>
-											</select>
-											<div class="dropDownSelect2"></div>
-										</div>
-									</div>
-								</div>
+								
 
 								<div class="flex-w flex-r-m p-b-10">
 									<div class="size-204 flex-w flex-m respon6-next">
@@ -564,6 +510,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 <!--===============================================================================================-->
 	<script src="{% static 'vendor/select2/select2.min.js' %}"></script>
 	<script>
+		
 		$(".js-select2").each(function(){
 			$(this).select2({
 				minimumResultsForSearch: 20,
@@ -600,7 +547,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	<script src="{% static 'vendor/isotope/isotope.pkgd.min.js' %}"></script>
 <!--===============================================================================================-->
 	<script 
-</html>src="{% static 'vendor/sweetalert/sweetalert.min.js' %}"></script>
+	</html>src="{% static 'vendor/sweetalert/sweetalert.min.js' %}"></script>
 	<script>
 		$('.js-addwish-b2').on('click', function(e){
 			e.preventDefault();
@@ -628,13 +575,33 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 		});
 
 		/*---------------------------------------------*/
-
-		$('.js-addcart-detail').each(function(){
+		
+		{% comment %} $('.js-addcart-detail').each(function(){
+			
 			var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
-			$(this).on('click', function(){
-				swal(nameProduct, "is added to cart !", "success");
+			$(this).on('click', function()
+			
+			{
+			  $.ajax({
+				type: 'POST',
+				url: `/add_to_cart/${book_id}/`,
+				headers: {
+				  'X-CSRFToken': '{{ csrf_token }}', // Include the CSRF token for security
+				},
+				data: {
+				  // Any additional data you need to send to the server
+				},
+				success: function(data) {
+				  // Handle the response from the server (e.g., display a success message)
+				  swal(nameProduct, "is added to cart !", "success");
+				},
+				error: function(error) {
+				  // Handle any errors that occurred during the AJAX request
+				  console.error('Error:', error);
+				}
+			  });
 			});
-		});
+		  }); {% endcomment %}
 	
 	</script>
 <!--===============================================================================================-->
@@ -656,5 +623,5 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	</script>
 <!--===============================================================================================-->
 	<script src="{% static 'user/js/main.js' %}"></script>
-
+	{% block script %}{% endblock script %}
 </body>

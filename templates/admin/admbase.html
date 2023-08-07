@@ -16,7 +16,7 @@
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="index.html">E-NAH Administrator</a>
+        <a class="navbar-brand ps-3" href="index.html"> Administrator</a>
         <!-- Sidebar Toggle-->
         <!--<button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>-->
         <!-- Navbar Search-->
@@ -102,8 +102,8 @@
                     <!-- Cuurent date and time-->
                     <p id="datetime" class="nav-link text-light"></p>
                     <!---->
-                    <div class="small text-light">Logged in as:</div>
-                    {{ request.user.name }}
+                    <div class="small text-light">Logged in as: {{ request.user.username }}</div>
+                    
                 </div>
             </nav>
         </div>
@@ -123,21 +123,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 
     <!--To show current date and time-->
-    <script>
-        function updateDateTime() {
-            var datetimeElement = document.getElementById('datetime');
-            var currentDateTime = new Date();
-
-            var date = currentDateTime.toDateString();
-            var time = currentDateTime.toLocaleTimeString();
-
-            datetimeElement.innerHTML = 'Current Date: ' + date + '<br>Current Time: ' + time;
-        }
-
-        // Update the date and time every second (1000 milliseconds)
-        setInterval(updateDateTime, 1000);
-
-    </script>
+    
     <script>
         $(document).ready(function () {
             $('#adminpopupModal').modal('show');

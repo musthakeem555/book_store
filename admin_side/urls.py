@@ -15,5 +15,4 @@ urlpatterns = [
     path('editbook/<int:id>',views.editbook,name='editbook'),
     path('deletebook/<int:id>',views.deletebook,name='deletebook'),
     
-    
 ]

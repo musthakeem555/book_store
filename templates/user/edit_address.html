@@ -1,0 +1,28 @@
+{% extends 'user/base.html' %}
+
+{% block content %}
+<div class="container mt-5 ml-5 mb-4">
+  <h2>Edit Address</h2>
+  <form method="post" class="mt-4">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="street">Street:</label>
+      <input type="text" id="street" name="street" class="form-control" value="{{ address.street }}" required>
+    </div>
+    <div class="form-group">
+      <label for="city">City:</label>
+      <input type="text" id="city" name="city" class="form-control" value="{{ address.city }}" required>
+    </div>
+    <div class="form-group">
+      <label for="state">State:</label>
+      <input type="text" id="state" name="state" class="form-control" value="{{ address.state }}" required>
+    </div>
+    <div class="form-group">
+      <label for="postal_code">Postal Code:</label>
+      <input type="text" id="postal_code" name="postal_code" class="form-control" value="{{ address.postal_code }}" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a href="{% url 'address_list' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+{% endblock %}

@@ -9,8 +9,7 @@ from .models import user_details
 from . import verify
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth import logout
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.cache import never_cache
+
 
 # Create your views here.
 def signup(request):
@@ -24,7 +23,7 @@ def signup(request):
        phone_number=request.POST.get('phone_number')
        password=request.POST.get('password')
        password2=request.POST.get('password1')
-       print('phone===',phone_number)
+       print('phone==',phone_number)
 
 
        if password==password2:
@@ -79,10 +78,10 @@ def otp_verify(request,id,phone):
 
 def user_login(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
+        username = request.POST.get('user')
         password = request.POST.get('password')
 
-        user = authenticate(request, email=email, password=password)
+        user = authenticate(request, username =username, password=password)
 
         if user is not None:
             if user.is_active:
@@ -95,7 +94,7 @@ def user_login(request):
             messages.error(request, 'Invalid email or password.')
 
     return render(request, 'auth/login.html')
-@never_cache
+
 def admin_login(request):
     if request.user.is_authenticated and request.user.is_superuser:
         return redirect('userlist')

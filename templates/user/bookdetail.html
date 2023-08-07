@@ -43,9 +43,12 @@
             
             <!--  -->
             <div class="p-t-33">
-                <button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
-                    Add to cart
-                </button>
+                <a href= "{% url 'add_to_cart' book.id %}">
+                    <button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 l">
+                        Add to cart
+                    </button>
+                </a>
+                
             </div>    
         </div>
     </div>
@@ -55,3 +58,33 @@
 </section>
 
 {% endblock  %}
+{% block script %}
+<script>
+    $('.js-addcart-detail').each(function(){
+			
+        var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
+        $(this).on('click', function()
+        
+        {
+          $.ajax({
+            type: 'POST',
+            url: `/add_to_cart/${book_id}/`,
+            headers: {
+              'X-CSRFToken': '{{ csrf_token }}', // Include the CSRF token for security
+            },
+            data: {
+              // Any additional data you need to send to the server
+            },
+            success: function(data) {
+              // Handle the response from the server (e.g., display a success message)
+              swal(nameProduct, "is added to cart !", "success");
+            },
+            error: function(error) {
+              // Handle any errors that occurred during the AJAX request
+              console.error('Error:', error);
+            }
+          });
+        });
+      });
+</script>
+{% endblock script %}

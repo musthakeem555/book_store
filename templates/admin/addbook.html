@@ -37,6 +37,19 @@
                 <label for="cover_image" class="form-label">Cover Image</label>
                 <input type="file" class="form-control" id="cover_image" name="cover_image">
             </div>
+            <!-- Add new fields -->
+            <div class="mb-3">
+                <label for="stock" class="form-label">Stock</label>
+                <input type="number" class="form-control" id="stock" name="stock" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-check-label" for="featured">
+                    <input type="checkbox" class="form-check-input" id="featured" name="featured">
+                    Featured
+                </label>
+            </div>
+            <!-- End of new fields -->
+
             <button type="submit" class="btn btn-primary">Add Book</button>
         </form>
     </div>
