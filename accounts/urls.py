@@ -24,5 +24,10 @@ urlpatterns = [
     path('otpverify/<str:phone>,<int:id>',views.otp_verify,name='otpverify'),
     path('login',views.user_login,name='login'),
     path('admlogin',views.admin_login,name='admlogin'),
-    path('admlogout',views.admlogout,name='admlogout')
+    path('admlogout',views.admlogout,name='admlogout'),
+    path('forgotPass',views.forgot_pass,name='forgotPass'),
+    path('forgotPass_otpVerify/<int:id>,<str:phone>,<str:password>',views.forgotPass_otpVerify,name='forgotPass_otpVerify'),
+    
+    path('test',views.test,name='test')
 ]
+ 

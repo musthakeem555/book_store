@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from . import views
+from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
     path('', views.index, name='home'),
@@ -30,7 +31,11 @@ urlpatterns = [
     path('cart/', views.cart, name='cart'),
     path('cart/update/<int:cart_item_id>/', views.update_cart_item, name='update_cart_item'),
     path('cart/delete/<int:cart_item_id>/', views.delete_cart_item, name='delete_cart_item'),
-    path('checkout/', views.checkout, name='checkout'),
-    path('payment/', views.payment, name='payment')
+    path('cart/checkout/', views.checkout, name='checkout'),
+    path('payment/<int:address_id>', views.payment, name='payment'),
+    path('order_confirmation/<int:order_id>', views.order_confirmation, name='order_confirmation'),
+    path('profile/', views.user_profile, name='user_profile'),
+    path('logout/', LogoutView.as_view(next_page='booklist'), name='logout'),
+    path('cancel_order/<int:order_id>/', views.cancel_order, name='cancel_order'),
 ]
 

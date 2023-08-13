@@ -2,7 +2,7 @@
 {% block content %}
     <div class="container mt-5">
         <h1 class="mb-4">Checkout</h1>
-        <form method="post" action="{% url 'cart' %}" id="checkoutForm">
+        <form method="post"  id="checkoutForm">
             {% csrf_token %}
             <div class="row">
                 <div class="col-md-8">

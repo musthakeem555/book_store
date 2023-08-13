@@ -92,8 +92,11 @@ def user_login(request):
                 messages.error(request, 'Your account is not active.')
         else:
             messages.error(request, 'Invalid email or password.')
+    else:  
+     return render(request, 'auth/login.html')
+ 
 
-    return render(request, 'auth/login.html')
+    
 
 def admin_login(request):
     if request.user.is_authenticated and request.user.is_superuser:
@@ -117,3 +120,54 @@ def admin_login(request):
 def admlogout(request):
     logout(request) 
     return redirect('admlogin')
+def test(request):
+    
+    return render(request,"user/index.html")
+
+def forgot_pass(request):
+    # if request.user.is_authenticated:
+    #    return redirect(signup)
+    if request.method=='POST':
+
+       phone_number=request.POST.get('phone_number')
+       password=request.POST.get('password')
+       password2=request.POST.get('password1')
+       current_user=user_details.objects.get(phone_number=phone_number)
+       
+
+
+       if password==password2:
+            print('hiii')        
+                
+            if len(phone_number)<10 or len(phone_number)>14 or not current_user:
+                messages.error(request,'Mobile Or Phone number is wrong')
+                print('2')
+
+                return redirect(signup)
+            else:
+                verify.send(current_user.phone_number)
+                return render(
+                request,
+                "auth/forgotPass_otp.html",
+                {"id": current_user.id, "phone": current_user.phone_number,"password":password},
+            )
+       else:
+                    messages.info(request,'!! The password is not matching !!')
+                    return redirect(forgot_pass)
+    else:
+        # return render(request,'auth/signup.html')
+        return render(request,'auth/forgot_pass.html')
+
+def forgotPass_otpVerify(request,id,phone,password):
+    if request.method == "POST":
+        code = request.POST.get("otp")
+        if verify.check(phone, code):
+            user = user_details.objects.get(id=id)
+            print(user)
+            user.set_password(password) 
+            return redirect("login")
+        else:
+            messages.error(request,'wrong OTP')
+            return redirect("login")
+    else:
+        return render(request,'auth/forgotPass_otp.html')

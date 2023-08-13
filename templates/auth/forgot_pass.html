@@ -1,5 +1,3 @@
-
-
 {%load static%}
 <html lang="en">
 
@@ -12,8 +10,12 @@
 	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">	
     <link rel="stylesheet" href="{% static 'fontslogin/material-icon/css/material-design-iconic-font.min.css' %}">
-	
-	
+
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript">
+    var jQuery_1_7_1 = $.noConflict(true);
+    </script>	
+
 	<style>
 
 		/* @extend display-flex; */
@@ -267,12 +269,8 @@
 		-o-transform: translate(-50%, -50%);
 		-ms-transform: translate(-50%, -50%); }
 	  
-
-
-
-
 	  .signup {
-		margin-bottom: 150px;}
+		margin-bottom: 150px; }
 	  
 	  .signup-content {
 		padding: 75px 0; }
@@ -616,64 +614,203 @@
 	</style>
 </head>
 <body>
-	<section class="sign-in">
+
+	<section class="signup">
 		<div class="container">
-			<div class="signin-content">
-				<div class="signin-image">
-					<figure>
-						<!-- Replace the image URL with the correct path to your "reading.jpg" image in the "book_covers" folder -->
-						<img src="{% static 'images/book_covers/reading.jpg' %}" alt="sing up image">
-					</figure>
-					
-					
-				</div>
-
-				<div class="signin-form">
-					<h2 class="form-title">Login</h2>
-					<form method="POST" class="register-form" id="login-form">
-
+			<div class="signup-content">
+				<div class="signup-form">
+					<h2 class="form-title">Forgot Password</h2>		
+					<form  method="POST" class="register-form" id="register-form">
 
 						{%csrf_token%}
 
 
 						<div class="form-group">
-							<label for="your_name"><i class="zmdi zmdi-email material-icons-name"></i></label>
-							<input type="text" name="user" id="your_name" placeholder="Username"/>
+							<label for="email"><i class="zmdi zmdi-phone"></i></label>
+							<input type="text" name="phone_number" id="phonenumber"  onkeyup="validatePhonenumber()" placeholder="phone number"/>
 						</div>
+						<small id="phonenumber-error" class="m-l-30" ></small>
+
+
 						<div class="form-group">
-							<label for="your_pass"><i class="zmdi zmdi-lock"></i></label>
-							<input type="password" name="password" id="your_pass" placeholder="Password"/>
+							<label for="pass"><i class="zmdi zmdi-lock"></i></label>
+							<input type="password" name="password" id="pass" onkeyup="validatePassword()" placeholder="New Password"/>
 						</div>
+						<small id="password-error" class="m-l-30" ></small>
+
+						<div class="form-group">
+							<label for="re-pass"><i class="zmdi zmdi-lock-outline"></i></label>
+							<input type="password" name="password1" id="re_pass" onkeyup="validateCPassword()" placeholder="Confirm your password"/>
+						</div> 
+						<small id="cpassword-error" class="m-l-30" ></small>
+
+
 						
-						<div class="d-flex justify-content-center">
-							<button type="submit" class="btn btn-primary mt-4" style="width: 400px;">login</button>
+						<div class="form-group form-button">
+							<input type="submit" name="verfify" id="signup" class="form-submit" />
 						</div>
-						<div class="col-md-12 mt-2 text-center">
-							<a href="{% url 'forgotPass' %}" class="btn btn-link">Forgot Password?</a>
-						</div>
-						<div>
-							<a href="signup" class="signup-image-link mt-2" style="position: relative; right: 90px;">Create an account</a>
-						</div>
+
+
 					</form>
-					<div class="social-login">
-						
-						
-					</div>
 				</div>
+			
+			</div>
+			<div>
+        
+				{% if messages %}
+				{% for message in messages %}
+				<script>
+					swal('{{message}}')
+				</script>
+				{% endfor %}
+				{% endif %}
+				
 			</div>
 		</div>
+			
 	</section>
 
-					{% if messages %}
-                    {% for message in messages %}
-                    <script>
-                        swal('{{message}}')
-                    </script>
-                    {% endfor %}
-                    {% endif %}
+	<script>
+
+		var firstnameError = document.getElementById('firstname-error');
+		var lastnameError = document.getElementById('lastname-error');
+		var emailError = document.getElementById('email-error');
+		var phonenumberError = document.getElementById('phonenumber-error');
+		var passwordError = document.getElementById('password-error');
+        var cpasswordError = document.getElementById('cpassword-error');
+
+		function validateName() {
+            var firstname=document.getElementById('first_name').value.trim();
+			var Required=2;
+            var left=Required - firstname.length;
+            if (firstname.length==0) {
+                firstnameError.innerHTML='name is required';
+                firstnameError.style.color='red'
+                return false;
+                }
+			if (left>0){
+			
+				firstnameError.innerHTML =left+ 'more character required';
+				firstnameError.style.color='red'
+				return false;
+			
+			}
+            
+            
+            firstnameError.innerHTML='Name is valid';
+            firstnameError.style.color='green'
+            return true;
+            }
+
+			{% comment %} function validateLname() {
+				var lastname=document.getElementById('last_name').value.trim();
+				var Required=1;
+				var left=Required - lastname.length;
+				if (lastname.length==0) {
+					lastnameError.innerHTML='name is required';
+					lastnameError.style.color='red'
+					return false;
+					}
+				if (left>0){
+				
+					lastnameError.innerHTML =left+ 'more character required';
+					lastnameError.style.color='red'
+					return false;
+				
+				}
+				
+				lastnameError.innerHTML='Name is valid';
+				lastnameError.style.color='green'
+				return true;
+				} {% endcomment %}
+
+
+				function validateEmail(){
+					var email = document.getElementById('email').value.trim();
+					if (email.length==0) {
+						emailError.innerHTML='Email is Required';
+						emailError.style.color='red'
+						return false;
+					}
+		
+					if (!email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
+						emailError.innerHTML='Email is Invalid';
+						emailError.style.color='red'
+						return false;
+					}
+					emailError.innerHTML='Email is valid';
+					emailError.style.color='green'
+					return true;
+				}
+
+
+				function validatePhonenumber(){
+					var phonenumber = document.getElementById('phonenumber').value.trim();
+					var num = phonenumber.replace(/[^\d]/g, '');
+					console.log(num)
+					if (num.length==0) {
+						phonenumberError.innerHTML='Phone number is Required';
+						phonenumberError.style.color='red'
+						return false;
+					}
+					if (num.length < 12 || num.length > 14) {  
+						phonenumberError.innerHTML='Phone number should be 13 numbers with +91';
+						phonenumberError.style.color='red'
+						return false;
+						
+					}
+					
+					phonenumberError.innerHTML='Phone number is valid';
+					phonenumberError.style.color='green'
+					return true; 
+					
+				}
+
+				function validatePassword(){
+					var password = document.getElementById('pass').value.trim();
+					if (password.length<=4) {
+						passwordError.innerHTML='Password length should be minimum 5 ';
+						passwordError.style.color='red'
+						return false;
+					}
+					
+					passwordError.innerHTML='Password is valid';
+					passwordError.style.color='green'
+					return true; 
+				}
+
+				function validateCPassword(){
+					var cpassword = document.getElementById('re_pass').value.trim();
+					if (cpassword.length<=4) {
+							cpasswordError.innerHTML='Password length should be minimum 5';
+							cpasswordError.style.color='red'
+							return false;
+					}
+						
+						cpasswordError.innerHTML='Password is valid';
+						cpasswordError.style.color='green'
+						return true; 
+						
+					}
 
 
 
-	
+			jQuery_1_7_1(document).on("submit", "form", function (e) {
+				validateName() 
+				validateLname()
+				validateEmail() 
+				validatePhonenumber()
+				validatePassword() 
+				validateCPassword()
+            
+				if ( validateName() && validateLname()  && validateEmail() && validatePhonenumber() && validatePassword() && validateCPassword()) {
+				   
+				} else {
+					e.preventDefault();
+					swal('Invalid data! Ensure You have entered correct data');
+					return true;
+				}
+			});
+	</script>
 </body>
 </html>

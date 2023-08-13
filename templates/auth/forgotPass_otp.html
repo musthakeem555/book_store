@@ -1,5 +1,3 @@
-
-
 {%load static%}
 <html lang="en">
 
@@ -12,8 +10,12 @@
 	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">	
     <link rel="stylesheet" href="{% static 'fontslogin/material-icon/css/material-design-iconic-font.min.css' %}">
-	
-	
+
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript">
+    var jQuery_1_7_1 = $.noConflict(true);
+    </script>	
+
 	<style>
 
 		/* @extend display-flex; */
@@ -267,12 +269,8 @@
 		-o-transform: translate(-50%, -50%);
 		-ms-transform: translate(-50%, -50%); }
 	  
-
-
-
-
 	  .signup {
-		margin-bottom: 150px;}
+		margin-bottom: 150px; }
 	  
 	  .signup-content {
 		padding: 75px 0; }
@@ -616,64 +614,46 @@
 	</style>
 </head>
 <body>
-	<section class="sign-in">
+
+	<section class="signup">
 		<div class="container">
-			<div class="signin-content">
-				<div class="signin-image">
-					<figure>
-						<!-- Replace the image URL with the correct path to your "reading.jpg" image in the "book_covers" folder -->
-						<img src="{% static 'images/book_covers/reading.jpg' %}" alt="sing up image">
-					</figure>
-					
-					
-				</div>
-
-				<div class="signin-form">
-					<h2 class="form-title">Login</h2>
-					<form method="POST" class="register-form" id="login-form">
-
+			<div class="signup-content">
+				<div class="signup-form">
+					<h2 class="form-title">OTP verification</h2>		
+					<form  action="{% url 'forgotPass_otpVerify' id phone password %}" method="POST" class="register-form" id="register-form">
 
 						{%csrf_token%}
 
+						{% comment %} <p>{{id}}</p> {% endcomment %}
+						<div class="form-group">
+							<label for="name"><i class="zmdi zmdi-account material-icons-name"></i></label>
+							<input type="text" name="otp" id="otp"     placeholder="enter otp"/>
+						</div>
+						
+						<div class="form-group form-button">
+							<input type="submit" name="verify" id="verify" class="form-submit" value="verify"/>
+						</div>
 
-						<div class="form-group">
-							<label for="your_name"><i class="zmdi zmdi-email material-icons-name"></i></label>
-							<input type="text" name="user" id="your_name" placeholder="Username"/>
-						</div>
-						<div class="form-group">
-							<label for="your_pass"><i class="zmdi zmdi-lock"></i></label>
-							<input type="password" name="password" id="your_pass" placeholder="Password"/>
-						</div>
-						
-						<div class="d-flex justify-content-center">
-							<button type="submit" class="btn btn-primary mt-4" style="width: 400px;">login</button>
-						</div>
-						<div class="col-md-12 mt-2 text-center">
-							<a href="{% url 'forgotPass' %}" class="btn btn-link">Forgot Password?</a>
-						</div>
-						<div>
-							<a href="signup" class="signup-image-link mt-2" style="position: relative; right: 90px;">Create an account</a>
-						</div>
+
 					</form>
-					<div class="social-login">
-						
-						
-					</div>
 				</div>
+			
+			</div>
+			<div>
+
+        
+				{% if messages %}
+				{% for message in messages %}
+				<script>
+					swal('{{message}}')
+				</script>
+				{% endfor %}
+				{% endif %}
+			
+				
 			</div>
 		</div>
+			
 	</section>
-
-					{% if messages %}
-                    {% for message in messages %}
-                    <script>
-                        swal('{{message}}')
-                    </script>
-                    {% endfor %}
-                    {% endif %}
-
-
-
-	
 </body>
 </html>

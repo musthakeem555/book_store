@@ -8,12 +8,14 @@ from admin_side.models import Book
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from .models import Cart, CartItem, Book,Order,Address,OrderItem
+from .models import Cart, CartItem ,Order,Address,OrderItem
+from admin_side.models import Book
+
 
 # Create your views here.
 
 def index(request):
-    return render(request,'user/index.html')
+    return redirect('booklist')
 
 def book_list(request):
     # Get the list of books from the database
@@ -107,7 +109,7 @@ def add_to_cart(request, book_id):
     # Replace "cart_view" with the name of the view that displays the cart or the desired URL.
     return render(request, 'user/bookdetail.html', {'book': book})
 
-
+@login_required
 def cart(request):
     cart_items = CartItem.objects.filter(cart__user=request.user).order_by('pk')
     
@@ -150,6 +152,16 @@ def delete_cart_item(request, cart_item_id):
 
 
 def checkout(request):
+    if request.method == 'POST':
+        address_id = request.POST.get('selected_address')
+        
+        
+
+            # Handle the rest of the logic for placing the order and redirect to the confirmation page
+            # (You will need to implement this part based on your requirements)
+
+        return redirect('payment', address_id=address_id)  # Pass the selected_address_id to the order confirmation view
+
     # Get the current user's cart items
     cart = Cart.objects.get(user=request.user)
     cart_items = CartItem.objects.filter(cart=cart)
@@ -169,64 +181,100 @@ def checkout(request):
     return render(request, 'user/checkout.html', context)
 
 
+
 @login_required
-def payment(request):
+def payment(request,address_id):
     # Assuming you have the necessary logic to retrieve the user's cart items and calculate the total price
-    cart=Cart.objects.get(user=request.user)
-    cart_items = CartItem.objects.filter(cart=cart)
-    total_price = sum( item.book.price * item.quantity for item in cart_items)
+    if request.method == 'GET':
+        cart=Cart.objects.get(user=request.user)
+        cart_items = CartItem.objects.filter(cart=cart)
+        total_price = sum( item.book.price * item.quantity for item in cart_items)
+
+        context = {
+            'cart_items': cart_items,
+            'total_price': total_price,
+            'address_id' : address_id
+        }
+
+        return render(request, 'user/payment.html', context)
+
+    if request.method == 'POST':
+        user = request.user
+        cart = Cart.objects.get(user=user)
+        cart_items = CartItem.objects.filter(cart=cart)
+        address_id = request.POST.get('address_id')
+
+        if address_id:
+            address = Address.objects.get(id=address_id)
+            payment_method = "Cash on Delivery"
+            total_price = sum( item.book.price * item.quantity for item in cart_items)
+
+            # Create an order
+            order = Order.objects.create(
+                user=user,
+                address=address,
+                payment_method=payment_method,
+                total_amount=total_price
+            )
+            print(order.id)
+            # Create order items from cart items and deduct stock quantities
+            for cart_item in cart_items:
+                book = cart_item.book
+                ordered_quantity = cart_item.quantity
+                OrderItem.objects.create(
+                    order=order,
+                    book=book,
+                    quantity=ordered_quantity
+                )
+                book.stock -= ordered_quantity
+                book.save()
+                cart_item.delete()
+
+            # Clear the cart
+            # cart.items.all().delete()
+
+            # Redirect to order confirmation or success page
+            return redirect('order_confirmation',order_id=order.id)
+        
+
+def order_confirmation(request,order_id):
+    # Get the order ID from the request or session
+
+    # Retrieve the order details, including order items
+    order = Order.objects.get(id=order_id)
+    order_items = OrderItem.objects.filter(order=order_id)
+    print(order_items)
+    print(order)
 
     context = {
-        'cart_items': cart_items,
-        'total_price': total_price,
+        'order': order,
+        'order_items': order_items,
     }
 
-    return render(request, 'user/payment.html', context)
+    return render(request, 'user/confirmation.html', context)
+@login_required
+def user_profile(request):
+    user = request.user  # Assuming the user is authenticated
+    orders = Order.objects.filter(user=user).order_by('-order_date')
+    
+    context = {
+        'user': user,
+        'orders': orders,
+    }
+    return render(request, 'user/user_profile.html', context)
 
+def cancel_order(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
 
+    # Delete the order
+    order.delete()
 
-def place_order(request):
-    user = request.user
-    cart = Cart.objects.get(user=user)
-    address_id = request.session.get('selected_address_id')
-
-    if address_id:
-        address = Address.objects.get(id=address_id)
-        payment_method = "Cash on Delivery"
-        total_amount = cart.calculate_total_amount()
-
-        # Create an order
-        order = Order.objects.create(
-            user=user,
-            address=address,
-            payment_method=payment_method,
-            total_amount=total_amount
-        )
-
-        # Create order items from cart items and deduct stock quantities
-        for cart_item in cart.items.all():
-            book = cart_item.book
-            ordered_quantity = cart_item.quantity
-            OrderItem.objects.create(
-                order=order,
-                book=book,
-                quantity=ordered_quantity
-            )
-            book.stock -= ordered_quantity
-            book.save()
-
-        # Clear the cart
-        cart.items.all().delete()
-
-        # Redirect to order confirmation or success page
-        return redirect('order_confirmation')  # Replace with the appropriate URL name
-    else:
-        # Redirect back to the payment page with an error message
-        messages.error(request, "Please select an address before placing the order.")
-        return redirect('payment')  # Replace with the appropriate URL name
-
-    return render(request, 'confirmation.html')  # Create the corresponding template
+    # After cancellation, redirect the user back to the profile page
+    return redirect('user_profile')
+        
 
 
 
 
+
+ 

@@ -33,6 +33,9 @@
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="{% static 'vendor/perfect-scrollbar/perfect-scrollbar.css' %}">
 <!--===============================================================================================-->
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+
 	<link rel="stylesheet" type="text/css" href="{% static 'css/util.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -45,86 +48,39 @@
 	<header>
 		<!-- Header desktop -->
 		<div class="container-menu-desktop">
-			<!-- Topbar -->
-			<div class="top-bar">
-				<div class="content-topbar flex-sb-m h-full container">
-					
+			<nav class="navbar navbar-expand-lg bg-body-tertiary" style="height: 75px;">
+				<div class="container-fluid">
+				  <a class="navbar-brand" href="#">Navbar w/ text</a>
+				  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				  </button>
+				  <div class="collapse navbar-collapse" id="navbarText">
+					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					  <li class="nav-item">
+						<a class="nav-link active" aria-current="page" href="#" style="text-decoration: none; color: black;">Home</a>
+					  </li>
+					  <li class="nav-item">
+						<a class="nav-link" href="#" style="text-decoration: none; color: black;">Shop</a>
+					  </li>
+					  <li class="nav-item">
+						<a class="nav-link" href="#" style="text-decoration: none; color: black;">Pricing</a>
+					  </li>
+					</ul>
+				  </div>
 
-					<div class="right-top-bar flex-w h-full">
-						<a href="#" class="flex-c-m trans-04 p-lr-25">
-							Help & FAQs
-						</a>
+				  <div>
+					<div class="d-inline-flex">
+						<div class="p-2"><i class="zmdi zmdi-favorite" style="font-size: 25px;cursor: pointer;"></i></div>
+						<div class="p-2"><i class="zmdi zmdi-shopping-cart" style="font-size: 25px;cursor: pointer;"></i></div>
+						<div class="p-2"><i class="zmdi zmdi-account" style="font-size: 25px;cursor: pointer;"></i></div>
+						
 
-						<a href="login" class="flex-c-m trans-04 p-lr-25">
-							My Account
-						</a>
 
-						<a href="#" class="flex-c-m trans-04 p-lr-25">
-							EN
-						</a>
-
-						<a href="#" class="flex-c-m trans-04 p-lr-25">
-							USD
-						</a>
 					</div>
+					
+				  </div>
 				</div>
-			</div>
-
-			<div class="wrap-menu-desktop">
-				<nav class="limiter-menu-desktop container">
-					
-					<!-- Logo desktop -->		
-					{% comment %} <a href="#" class="logo">
-						<img src="{% static 'user/images/icons/logo-01.png' %}" alt="IMG-LOGO">
-					</a> {% endcomment %}
-
-					<!-- Menu desktop -->
-					<div class="menu-desktop">
-						<ul class="main-menu">
-							<li class="active-menu">
-								<a href="{% static 'user/index.html' %}">Home</a>
-								{% comment %} <ul class="sub-menu">
-									<li><a href="index.html">Homepage 1</a></li>
-									<li><a href="home-02.html">Homepage 2</a></li>
-									<li><a href="home-03.html">Homepage 3</a></li>
-								</ul> {% endcomment %}
-							</li>
-
-							<li>
-								<a href="{% static 'user/product.html' %}">Shop</a>
-							</li>
-
-							<li class="label1" data-label1="hot">
-								<a href="{% static 'user/shoping-cart.html' %}">Features</a>
-							</li>
-
-
-							<li>
-								<a href="{% static 'user/about.html' %}">About</a>
-							</li>
-
-							<li>
-								<a href="{% static 'user/contact.html' %}">Contact</a>
-							</li>
-						</ul>
-					</div>	
-
-					<!-- Icon header -->
-					<div class="wrap-icon-header flex-w flex-r-m">
-						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
-							<i class="zmdi zmdi-search"></i>
-						</div>
-
-						<div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart" data-notify="2">
-							<i class="zmdi zmdi-shopping-cart"></i>
-						</div>
-
-						<a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="0">
-							<i class="zmdi zmdi-favorite-outline"></i>
-						</a>
-					</div>
-				</nav>
-			</div>	
+			  </nav>	
 		</div>
 
 		<!-- Header Mobile -->
@@ -221,7 +177,7 @@
 	</header>
 
 	<!-- Cart -->
-	<div class="container mt-4"> </div>
+	<div class="container"> </div>
 		
 
 	{% block content %}{% endblock  %}
