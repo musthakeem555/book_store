@@ -1,0 +1,31 @@
+/* Define the black hover style */
+.btn-black-hover:hover {
+    background-color: black;
+    border-color: black;
+    color: white; /* Set text color to white to ensure visibility */
+}
+.btn-custom {
+    border-color: black;
+    color: black; /* Set default text color to black */
+    width: auto;
+}
+
+/* Style for the radio button container */
+input[type="radio"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border: 2px solid black; /* Border color for the unchecked state */
+    border-radius: 50%; /* Makes it a circle */
+}
+
+/* Style for the radio button when selected */
+input[type="radio"]:checked {
+    border-color: black; /* Border color for the checked state */
+    background-color: black;
+    border-radius: 50%;
+     /* Background color for the checked state */
+}
+

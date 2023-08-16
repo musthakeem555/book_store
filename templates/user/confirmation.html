@@ -1,18 +1,19 @@
 {% extends 'user/base.html' %}
 
 {% block content %}
-    <div class="container">
+    <div class="container my-4" style="color: black;">
         <div class="row">
-            <div class="col-md-12 text-center">
+            <div class="col-md-12 text-center" style="font-weight: 550;">
                 <h1 class="mb-4">Order Confirmation</h1>
                 <p>Your order has been successfully placed!</p>
                 <p>Order ID: {{ order.id }}</p>
+                <p>Delivery: Within 5-7 working days</p>
             </div>
         </div>
-        <div class="row mt-5">
+        <div class="row mt-3">
             <div class="col-md-8">
-                <h2>Order Summary</h2>
-                <ul class="list-group">
+                <h5>Order Summary</h5>
+                <ul class="list-group mt-2" style="border: 1px solid black;">
                     {% for order_item in order_items %}
                         <li class="list-group-item">
                             {{ order_item.quantity }}x {{ order_item.book.title }}
@@ -22,15 +23,19 @@
                 </ul>
             </div>
             <div class="col-md-4">
-                <h2>Payment Details</h2>
-                <p>Payment Method: {{ order.payment_method }}</p>
-                <h4 class="mt-4">Total Amount: ${{ order.total_amount|floatformat:2 }}</h4>
+                <h5>Payment Details</h5>
+                <div class="mt-2 p-2" style="border: 1px solid black; border-radius: 4px;">
+                    <p class="mt-2">Payment Method: <span class="float-right">{{ order.payment_method }}</span></p>
+                    <h6 class="mt-3 mb-2">Total Amount: <span class="float-right">${{ order.total_amount|floatformat:2 }}</span></h6>
+                </div>
+                
+                
             </div>
         </div>
-        <div class="row mt-5">
+        <div class="row mt-4">
             <div class="col-md-12 text-center">
                 <p>Thank you for shopping with us!</p>
-                <a href="{% url 'home' %}" class="btn btn-primary">Continue Shopping</a>
+                <a href="{% url 'home' %}" class="btn btn-outline-dark btn-black-hover btn-custom">Continue Shopping</a>
             </div>
         </div>
     </div>
