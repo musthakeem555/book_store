@@ -34,6 +34,7 @@ class Order(models.Model):
     payment_method = models.CharField(max_length=50)
     order_date = models.DateTimeField(default=datetime.now)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    order_status = models.CharField(default='order placed')
 
     def __str__(self):
         return f"Order {self.id} for {self.user.username} on {self.order_date}"

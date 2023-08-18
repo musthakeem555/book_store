@@ -271,6 +271,20 @@ def cancel_order(request, order_id):
 
     # After cancellation, redirect the user back to the profile page
     return redirect('user_profile')
+
+
+def my_orders(request):
+    user = request.user
+    order_items = OrderItem.objects.filter(order__user=user).order_by('-order__order_date')
+
+    context = {
+        'order_items': order_items
+    }
+
+    return render(request, 'user/my_orders.html', context)
+
+
+
         
 
 

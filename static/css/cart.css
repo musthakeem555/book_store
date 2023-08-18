@@ -29,3 +29,35 @@ input[type="radio"]:checked {
      /* Background color for the checked state */
 }
 
+/* Additional CSS specific to the order items page */
+.order-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    border: 1px solid black;
+    padding: 10px;
+}
+
+.order-item-image {
+    max-width: 100px;
+    max-height: 100px;
+    margin-right: 10px;
+}
+
+.order-item-details {
+    flex-grow: 1;
+}
+
+.order-item-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.order-item-date, .order-item-status {
+    margin-bottom: 5px;
+}
+
+.btn-cancel {
+    margin-top: 5px;
+}

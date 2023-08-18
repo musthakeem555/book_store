@@ -1,0 +1,35 @@
+{% extends 'user/base.html' %}
+{% load static %}
+
+{% block additional_css %}
+    <!-- Additional CSS specific to the order items page -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/cart.css' %}">
+{% endblock %}
+
+
+{% block content %}
+    <h6 style="margin-left: 25px; margin-top: 10px; color: rgb(146, 149, 152);">My Order Items</h6>
+    <div class="container">
+        {% for order_item in order_items %}
+            <div class="order-item">
+                <img src="{{ order_item.book.cover_image.url }}" alt="{{ order_item.book.title }}" class="order-item-image">
+                <div class="order-item-details">
+                    <div class="order-item-title">{{ order_item.book.title }}</div>
+                    <div class="order-item-status">Order Status: {{ order_item.order.order_status }}</div>
+                    <div class="order-item-date">Ordered Date: {{ order_item.order.order_date }}</div>
+                    {% if order_item.order.order_status == 'order placed' or order_item.order.order_status == 'order shipped' %}
+                        <form method="post" action="{% url 'cancel_order' order_item.order.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-outline-dark btn-black-hover btn-cancel">
+                                Cancel
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+
+

@@ -20,12 +20,13 @@ PROFILE
             <div class="col-lg-3 col-md-12 ms-5">
 
                 <div class="d-inline-flex p-2 mt-5"
-                    style="background-color: rgb(255, 255, 255); width: 260px; height: 60px; border: 0.3px solid rgb(235, 215, 215);box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                    style="background-color: rgb(255, 255, 255); width: 260px; height: 60px; border: 1px solid rgb(0, 0, 0);box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
                     <i class="bi bi-person ms-3" style="font-size: 28px;"></i>
                     <h5 style="margin-left: 15px; margin-top: 10px;">Hello</h5>
                 </div>
 
-                <div class="d-inline-flex p-2 mt-3"
+                <div class="mt-3" style="border: 1px solid black;overflow: hidden;">
+                  <div class="d-inline-flex p-2"
                     style="background-color: rgb(255, 255, 255); width: 260px; height: 60px;">
                     <i class="bi bi-gear ms-3" style="font-size: 28px; color: rgb(65, 65, 184);"></i>
                     <h6 style="margin-left: 10px; margin-top: 10px; color: rgb(146, 149, 152);">ACCOUNT SETTINGS</h6>
@@ -36,39 +37,20 @@ PROFILE
                 </div>
                 <div class="d-inline-flex p-2 d-flex justify-content-center"
                     style="background-color: rgb(255, 255, 255); width: 260px; height: 60px;">
-                    <a href="/User_address" style=" margin-top: 10px; color: rgb(146, 149, 152); text-decoration: none;">Manage Address</a>
+                    <a href="/address_list" style=" margin-top: 10px; color: rgb(146, 149, 152); text-decoration: none;">Manage Address</a>
                 </div>
 
 
                 <div class="d-inline-flex p-2"
                     style="background-color: rgb(255, 255, 255); width: 260px; height: 60px; border-top: 0.3px solid rgb(235, 215, 215);">
                     <i class="bi bi-cart4 ms-3" style="font-size: 28px; color: rgb(65, 65, 184);"></i>
-                    <h6 style="margin-left: 25px; margin-top: 10px; color: rgb(146, 149, 152);">MY ORDERS</h6>
+                    <a href="{% url 'my_orders' %}" style="text-decoration: none; color: black;">
+                      <h6 style="margin-left: 25px; margin-top: 10px; color: rgb(146, 149, 152);">MY ORDERS</h6>
+                    </a>
+                  
                     <i class="bi bi-arrow-right-circle"
                         style="font-size: 15px; margin-top: 10px; color: rgb(146, 149, 152); margin-left: 50px;"></i>
                 </div>
-
-
-
-                <div class="d-inline-flex p-2"
-                    style="background-color: rgb(255, 255, 255); width: 260px; height: 60px; border-top: 0.3px solid rgb(235, 215, 215);">
-                    <i class="bi bi-credit-card ms-3" style="font-size: 28px; color: rgb(65, 65, 184);"></i>
-                    <h6 style="margin-left: 15px; margin-top: 10px; color: rgb(146, 149, 152);">PAYMENT METHODS</h6>
-                </div>
-                <div class="d-inline-flex p-2 d-flex justify-content-center"
-                    style="background-color: rgb(255, 255, 255); width: 260px; height: 60px;">
-                    <p style=" margin-top: 10px; color: rgb(146, 149, 152);">Debit/Credit Cards</p>
-                </div>
-                <div class="d-inline-flex p-2 d-flex justify-content-center"
-                    style="background-color: rgb(255, 255, 255); width: 260px; height: 60px;">
-                    <p style="margin-top: 10px; color: rgb(146, 149, 152);">UPI</p>
-                </div>
-                <div class="d-inline-flex p-2 d-flex justify-content-center"
-                    style="background-color: rgb(255, 255, 255); width: 260px; height: 60px;">
-                    <p style="margin-top: 10px; color: rgb(146, 149, 152);">Cash on Delivery</p>
-                </div>
-
-
                 <div class="d-inline-flex p-2"
                     style="background-color: rgb(255, 255, 255); width: 260px; height: 60px; border-top: 0.3px solid rgb(235, 215, 215);">
                     <i class="bi bi-box ms-3" style="font-size: 28px; color: rgb(65, 65, 184);"></i>
@@ -89,49 +71,42 @@ PROFILE
                     <i class="bi bi-box-arrow-left ms-3" style="font-size: 28px; color: rgb(65, 65, 184);"></i>
                     <h6 style="margin-left: 25px; margin-top: 10px; color: rgb(146, 149, 152);">LOGOUT</h6>
                 </div>
+                </div>
+                
 
             </div>
             {% block profile %}
-            <div class="col-lg-8 col-md-6 bg-white mt-5 pb-5" style=" border: 0.3px solid rgb(255, 255, 255);box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                <form action="/User_profile" method="post"> {% csrf_token %}
-                    <div class="mt-5 ms-5">
-                        <h5 class="d-inline-flex me-5">Personal Information</h5><span><a href="">Edit</a></span>
-                        <div>
-                            <input type="text" class="form-control mt-3" style="width: 300px;" id="first_name" name="first_name" placeholder="First Name" Required>
-                            <input type="text" class="form-control mt-3" style="width: 300px;" id="last_name" name="last_name" placeholder="Last Name" Required>
-                        </div>
+            <div class="col-lg-8 col-md-6 bg-white mt-5 pb-5" style="border: 1px solid rgb(0, 0, 0); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);padding-left: 25px;">
+              <form action="/User_profile" method="post"> {% csrf_token %}
+                  <div class="mt-5 ms-5">
+                      <h5 class="d-inline-flex me-5">Personal Information</h5>
+                      
+                  </div>
+                  <div class="mt-5 ms-5">
+                      <h6 class="d-inline-flex me-5">User Name</h6>
+                      <div>
+                        <input type="text" class="form-control mt-3" style="width: 300px;" id="username" name="username" placeholder="Username" value="{{ request.user.username }}" required>
                     </div>
-                    <div class="mt-5 ms-5">
-                        <p>Your Gender</p>
-                        <select name="gender" id="">
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-                    <div class="mt-5 ms-5">
-                        <p>Your Age</p>
-                        <div>
-                            <input type="text" class="form-control mt-3" style="width: 300px;" id="age" name="age" placeholder="Enter Your Age" Required>
-                        </div>
-                    </div>
-                    <div class="mt-5 ms-5">
-                        <h5 class="d-inline-flex me-5">Email Address</h5><span><a href="">Edit</a></span>
-                        <div>
-                            <input type="email" class="form-control mt-3" style="width: 300px;" id="email" name="email" placeholder="{{ex_user.email}}" Required>
-                        </div>
-                    </div>
-                    <div class="mt-5 ms-5">
-                        <h5 class="d-inline-flex me-5">Phone Number</h5><span><a href="">Edit</a></span>
-                        <div>
-                            <input type="text" class="form-control mt-3" style="width: 300px;" id="phone" name="phone" value="+91" placeholder="{{ex_user.phone}}" Required>
-                        </div>
-                    </div>
-                    <div class="mt-4 ms-5">
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
-                </form>
-            </div>
+                  </div>
+                  
+                  <div class="mt-5 ms-5">
+                      <h6 class="d-inline-flex me-5">Email Address</h6>
+                      <div>
+                          <input type="email" class="form-control mt-3" style="width: 300px;" id="email" name="email" placeholder="{{ request.user.email }}" required>
+                      </div>
+                  </div>
+                  <div class="mt-5 ms-5">
+                      <h6 class="d-inline-flex me-5">Phone Number</h6>
+                      <div>
+                          <input type="text" class="form-control mt-3" style="width: 300px;" id="phone" name="phone" value="{{ request.user.phone_number}}" placeholder="+91" required readonly>
+                      </div>
+                  </div>
+                  <div class="mt-4 ms-5">
+                      <button type="submit" class="btn btn-outline-dark btn-black-hover btn-custom">Submit</button>
+                  </div>
+              </form>
+          </div>
+          
             {% endblock %}
         </div>
     </div>
