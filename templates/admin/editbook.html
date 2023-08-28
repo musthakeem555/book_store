@@ -52,8 +52,20 @@
                 {% endif %}
             </div>
             <div class="mb-3">
+                <label for="cover_image" class="form-label">Current Back Image</label>
+                {% if book.back_image %}
+                    <img src="{{ book.back_image.url }}" alt="Current Cover Image" class="img-thumbnail" style="max-width: 200px;">
+                {% else %}
+                    <p>No cover image available</p>
+                {% endif %}
+            </div>
+            <div class="mb-3">
                 <label for="cover_image" class="form-label">New Cover Image (optional)</label>
                 <input type="file" class="form-control" id="cover_image" name="cover_image">
+            </div>
+            <div class="mb-3">
+                <label for="back_image" class="form-label">New Back Image (optional)</label>
+                <input type="file" class="form-control" id="back_image" name="back_image">
             </div>
             <button type="submit" class="btn btn-primary">Update Book</button>
         </form>

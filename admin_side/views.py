@@ -6,6 +6,7 @@ from .models import Category
 from django.http import HttpResponse
 from .models import Book
 from django.shortcuts import get_object_or_404
+from userapp.models import OrderItem, order_status
 
 def admhome(request):
     return render(request,'admin/admbase.html')
@@ -91,15 +92,16 @@ def addbook(request):
         price = request.POST.get('price')
         category_id = request.POST.get('category')
         cover_image = request.FILES.get('cover_image')
+        back_image = request.FILES.get('back_image')
         stock = request.POST.get('stock')
-        featured = request.POST.get('featured')
+        featured = request.POST.get('featured', False) == 'on'
 
         # Check if a book with the same title already exists
         if Book.objects.filter(title=title).exists():
             return render(request, 'admin/addbook.html', {'categories': Category.objects.all(), 'error_message': 'A book with this title already exists.'})
 
         # Create and save the book instance
-        book = Book(title=title, author=author, description=description, price=price, category_id=category_id, cover_image=cover_image, stock=stock, featured=featured)
+        book = Book(title=title, author=author, description=description, price=price, category_id=category_id, cover_image=cover_image,back_image=back_image, stock=stock, featured=featured)
         book.save()
 
         return redirect('addbook')  # Replace 'addbook' with the URL name for the book add page
@@ -138,6 +140,8 @@ def editbook(request, id):
         price = request.POST.get('price')
         category_id = request.POST.get('category')
         cover_image = request.FILES.get('cover_image')
+        back_image = request.FILES.get('back_image')
+
         stock = request.POST.get('stock')
         featured = request.POST.get('featured')  # Get the checkbox value as string
 
@@ -151,6 +155,8 @@ def editbook(request, id):
         book.category_id = category_id
         if cover_image:
             book.cover_image = cover_image
+        if back_image:
+            book.back_image = back_image
         book.stock = stock
         book.featured = featured  # Assign the boolean value to the 'featured' field
         book.save()
@@ -160,6 +166,34 @@ def editbook(request, id):
     else:
         categories = Category.objects.all()
         return render(request, 'admin/editbook.html', {'book': book, 'categories': categories})
+    
+
+def order_management(request):
+    # Retrieve all order items
+    order_items = OrderItem.objects.select_related('order', 'book', 'order_status').all()
+
+    # Retrieve all order statuses for the drop-down menu
+    statuses = order_status.objects.all()
+
+    if request.method == 'POST':
+        # Handle form submission for changing order status
+        order_item_id = request.POST.get('order_item_id')
+        new_status_id = request.POST.get('new_status')
+        
+        if order_item_id and new_status_id:
+            order_item = OrderItem.objects.get(pk=order_item_id)
+            new_status = order_status.objects.get(pk=new_status_id)
+            order_item.order_status = new_status
+            order_item.save()
+
+    context = {
+        'order_items': order_items,
+        'statuses': statuses,
+    }
+
+    return render(request, 'admin/order_management.html', context)
+
+    
 
 
 

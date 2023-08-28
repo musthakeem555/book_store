@@ -14,5 +14,5 @@ urlpatterns = [
     path('admbooklist',views.admbooklist,name='admbooklist'),
     path('editbook/<int:id>',views.editbook,name='editbook'),
     path('deletebook/<int:id>',views.deletebook,name='deletebook'),
-    
+    path('adm_order',views.order_management,name='adm_order'),
 ]

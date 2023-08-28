@@ -4,7 +4,7 @@ from django.shortcuts import render,redirect
 from django.contrib import messages
 from admin_side.models import Category
 from django.http import HttpResponse
-from admin_side.models import Book
+from admin_side.models import Book,order_status
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -91,6 +91,7 @@ def delete_address(request, address_id):
 
 
 def add_to_cart(request, book_id):
+    
     # Get the Book object based on the book_id or return a 404 page if not found.
     book = get_object_or_404(Book, pk=book_id)
 
@@ -111,6 +112,8 @@ def add_to_cart(request, book_id):
 
 @login_required
 def cart(request):
+    # Create and save instances
+
     cart_items = CartItem.objects.filter(cart__user=request.user).order_by('pk')
     
     total_price = sum(cart_item.book.price * cart_item.quantity for cart_item in cart_items)
@@ -264,13 +267,24 @@ def user_profile(request):
     return render(request, 'user/user_profile.html', context)
 
 def cancel_order(request, order_id):
-    order = get_object_or_404(Order, id=order_id, user=request.user)
+    order_item = OrderItem.objects.get(id=order_id)
+    
+    if order_item.order_status == 'order placed' or order_item.order_status == 'order shipped':
+        # Increase the book's stock by the quantity of the canceled order item
+        book = order_item.book
+        book.stock += order_item.quantity
+        book.save()
 
-    # Delete the order
-    order.delete()
+        # Delete the order item
+        order_item.order_status='cancelled'
+        order_item.save()
 
-    # After cancellation, redirect the user back to the profile page
-    return redirect('user_profile')
+        messages.success(request, 'Order item canceled successfully.')
+    else:
+        messages.error(request, 'Cannot cancel this order item.')
+
+    return redirect('my_orders')  # Redirect to the order items page
+
 
 
 def my_orders(request):
