@@ -19,6 +19,11 @@
             class="action-url"
             data-action-url="{% url 'update_cart_item' cart_item.id %}"
           ></div>
+          <div
+            hidden
+            class="delete-action-url"
+            data-action-url="{% url 'delete_cart_item' cart_item.id %}"
+          ></div>
           <div class="d-flex align-items-center">
             <img
               src="{{ cart_item.book.cover_image.url }}"
@@ -156,8 +161,7 @@
       const quantityEl = cartItemElParam.querySelector(".quantity");
       const formData = new FormData();
       formData.set("action", action);
-      formData.set("csrfmiddlewaretoken", "{{ csrf_token }}")
-      // TODO - Change url to url name
+      formData.set("csrfmiddlewaretoken", "{{ csrf_token }}");
       const response = await fetch(actionUrl, {
         method: "POST",
         body: formData,
@@ -185,23 +189,28 @@
 </script>
 
 <script>
-  $(document).ready(function () {
-    $(".delete-btn").on("click", function () {
-      const cartItemId = $(this).data("cart-item");
-      console.log("Button clicked!");
-      $.ajax({
-        type: "POST",
-        url: `/delete_cart_item/${cartItemId}/`,
-        data: {
-          csrfmiddlewaretoken: "{{ csrf_token }}",
-        },
-        success: function (data) {
-          // Remove the deleted cart item from the UI
-          $("#cart_item_" + cartItemId).remove();
-        },
-        error: function (error) {
-          alert("An error occurred while deleting the cart item.");
-        },
+  document.addEventListener("DOMContentLoaded", () => {
+    console.log("haiii");
+    const cartItemEls = Array.from(document.querySelectorAll(".cart-item"));
+
+    const deleteBtnClickHandler = async (cartItemElParam) => {
+      // Full URL including ID
+      const actionUrl =
+        cartItemElParam.querySelector(".delete-action-url").dataset.actionUrl;
+      const formData = new FormData();
+      formData.set("csrfmiddlewaretoken", "{{ csrf_token }}");
+      const response = await fetch(actionUrl, {
+        method: "POST",
+        body: formData,
+      });
+      const resBody = await response.json();
+      window.location.reload();
+    };
+
+    // Add event listeners to increment/decrement buttons
+    cartItemEls.forEach((cartItemEl) => {
+      cartItemEl.querySelector(".delete-btn").addEventListener("click", () => {
+        deleteBtnClickHandler(cartItemEl);
       });
     });
   });
