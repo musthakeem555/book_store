@@ -15,4 +15,8 @@ urlpatterns = [
     path('editbook/<int:id>',views.editbook,name='editbook'),
     path('deletebook/<int:id>',views.deletebook,name='deletebook'),
     path('adm_order',views.order_management,name='adm_order'),
+    path('coupon',views.coupon,name='coupon'),
+    path('addcoupon',views.add_coupon,name='add_coupon'),
+    path('editcoupon/<int:id>',views.edit_coupon,name='edit_coupon'),
+    path('deletecoupon/<int:id>',views.delete_coupon,name='delete_coupon'),
 ]

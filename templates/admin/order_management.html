@@ -10,6 +10,7 @@
         <table class="table">
             <thead>
                 <tr>
+                    <th>Order Id</th>
                     <th>Order Item</th>
                     <th>Order Status</th>
                     <th>Change Status</th>
@@ -18,6 +19,10 @@
             <tbody>
                 {% for order_item in order_items %}
                 <tr>
+                    <td>
+                        <!-- Display order item details here -->
+                        {{ order_item.id }}
+                    </td>
                     <td>
                         <!-- Display order item details here -->
                         {{ order_item.book.title }} - {{ order_item.quantity }}

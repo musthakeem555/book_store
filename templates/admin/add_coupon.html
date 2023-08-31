@@ -1,0 +1,56 @@
+{% extends 'admin/admbase.html' %}
+{% load static %}
+
+{% block additional_css %}
+    <!-- Additional CSS specific to the coupon management page -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/coupon.css' %}">
+{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h2 class="mb-4">Add New Coupon</h2>
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="coupon_code" class="form-label">Coupon Code</label>
+                        <input type="text" class="form-control" id="coupon_code" name="coupon_code" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="minimum_amount" class="form-label">Minimum Amount</label>
+                        <input type="number" class="form-control" id="minimum_amount" name="minimum_amount" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="discount_type" class="form-label">Discount Type</label>
+                        <select class="form-control" id="discount_type" name="discount_type" required>
+                            <option value="amount">Amount</option>
+                            <option value="percentage">Percentage</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="discount" class="form-label">Discount</label>
+                        <input type="number" class="form-control" id="discount" name="discount" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="valid_from" class="form-label">Valid From</label>
+                        <input type="datetime-local" class="form-control" id="valid_from" name="valid_from" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="valid_to" class="form-label">Valid To</label>
+                        <input type="datetime-local" class="form-control" id="valid_to" name="valid_to" required>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="active" name="active" checked>
+                        <label class="form-check-label" for="active">Active</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Coupon</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

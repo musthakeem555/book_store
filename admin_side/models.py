@@ -46,6 +46,23 @@ class order_status(models.Model):
     def __str__(self):
         return self.order_status
 
+class Coupon(models.Model):
+    DISCOUNT_TYPE_CHOICES = (
+        ('amount', 'Amount'),
+        ('percentage', 'Percentage'),
+    )
+    coupon_code=models.CharField(max_length=10,unique=True)
+    description=models.TextField()
+    minimum_amount=models.IntegerField()
+    discount_type=models.CharField(max_length=20,choices=DISCOUNT_TYPE_CHOICES)
+    discount=models.DecimalField(max_digits=5,decimal_places=2)
+    valid_from=models.DateTimeField()
+    valid_to=models.DateTimeField()
+    active=models.BooleanField(default=True)
+     
+    def _str_(self):
+        return self.coupon_code    
+
 
 
    

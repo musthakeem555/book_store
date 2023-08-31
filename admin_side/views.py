@@ -2,11 +2,13 @@ from django.shortcuts import render
 from accounts.models import user_details
 from django.shortcuts import render,redirect
 from django.contrib import messages
-from .models import Category
+from .models import Category,order_status
 from django.http import HttpResponse
 from .models import Book
 from django.shortcuts import get_object_or_404
-from userapp.models import OrderItem, order_status
+from userapp.models import OrderItem
+from django.utils import timezone
+from .models import Coupon
 
 def admhome(request):
     return render(request,'admin/admbase.html')
@@ -170,11 +172,10 @@ def editbook(request, id):
 
 def order_management(request):
     # Retrieve all order items
-    order_items = OrderItem.objects.select_related('order', 'book', 'order_status').all()
-
+    order_items = OrderItem.objects.all()   
+    print(order_items)
     # Retrieve all order statuses for the drop-down menu
     statuses = order_status.objects.all()
-
     if request.method == 'POST':
         # Handle form submission for changing order status
         order_item_id = request.POST.get('order_item_id')
@@ -192,6 +193,83 @@ def order_management(request):
     }
 
     return render(request, 'admin/order_management.html', context)
+
+
+def coupon(request):
+    coupons = Coupon.objects.all()
+    
+    context = {
+        'coupons': coupons,
+    }
+    return render(request, 'admin/coupon.html', context)
+
+
+
+def add_coupon(request):
+    if request.method == 'POST':
+        coupon_code = request.POST.get('coupon_code')
+        description = request.POST.get('description')
+        minimum_amount = int(request.POST.get('minimum_amount'))
+        discount_type = request.POST.get('discount_type')
+        discount = float(request.POST.get('discount'))
+        valid_from_iso = request.POST.get('valid_from')
+        valid_from = timezone.datetime.fromisoformat(valid_from_iso)
+        
+        valid_to_iso = request.POST.get('valid_to')
+        valid_to = timezone.datetime.fromisoformat(valid_to_iso)
+        active = bool(request.POST.get('active'))
+
+        # Create a new coupon instance
+        coupon = Coupon.objects.create(
+            coupon_code=coupon_code,
+            description=description,
+            minimum_amount=minimum_amount,
+            discount_type=discount_type,
+            discount=discount,
+            valid_from=valid_from,
+            valid_to=valid_to,
+            active=active
+        )
+
+        return redirect('coupon')  # Replace 'coupon_management' with the URL name of the coupon management page
+
+    return render(request, 'admin/add_coupon.html')
+
+def edit_coupon(request, id):
+    coupon = get_object_or_404(Coupon, pk=id)
+
+    if request.method == 'POST':
+        coupon.coupon_code = request.POST.get('coupon_code')
+        coupon.description = request.POST.get('description')
+        coupon.minimum_amount = int(request.POST.get('minimum_amount'))
+        coupon.discount_type = request.POST.get('discount_type')
+        coupon.discount = float(request.POST.get('discount'))
+        
+        valid_from_iso = request.POST.get('valid_from')
+        coupon.valid_from = timezone.datetime.fromisoformat(valid_from_iso)
+        
+        valid_to_iso = request.POST.get('valid_to')
+        coupon.valid_to = timezone.datetime.fromisoformat(valid_to_iso)
+        
+        coupon.active = request.POST.get('active') == 'on'
+        
+        coupon.save()
+        return redirect('coupon')  # Redirect to the coupon management page after editing
+        
+    context = {
+        'coupon': coupon
+    }
+    return render(request, 'admin/edit_coupon.html', context)
+
+
+def delete_coupon(request, id):
+    try:
+        coupon = Coupon.objects.get(pk=id)
+        coupon.delete()
+        return redirect('coupon')  # Redirect to the coupon list page
+    except Coupon.DoesNotExist:
+        return render(request, 'admin/error.html', {'error_message': 'Coupon not found'})  # Handle error case
+       
 
     
 

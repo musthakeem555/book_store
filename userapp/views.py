@@ -4,12 +4,14 @@ from django.shortcuts import render,redirect
 from django.contrib import messages
 from admin_side.models import Category
 from django.http import HttpResponse
-from admin_side.models import Book,order_status
+from admin_side.models import Book,order_status,Coupon
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from .models import Cart, CartItem ,Order,Address,OrderItem
 from admin_side.models import Book
+import razorpay
+from django.conf import settings
 
 
 # Create your views here.
@@ -136,22 +138,28 @@ def update_cart_item(request, cart_item_id):
             if cart_item.quantity < cart_item.book.stock:
                 cart_item.quantity += 1
             else:
-                messages.warning(request, "Sorry, you cannot add more of this book to the cart as it exceeds the available stock.")
+                return JsonResponse({'error': "Sorry, you cannot add more of this book to the cart as it exceeds the available stock."})
         elif action == 'decrease':
             cart_item.quantity = max(cart_item.quantity - 1, 1)
 
         cart_item.save()
     
-    return redirect('cart')
+    data = {
+        'new_quantity': cart_item.quantity,
+        'new_total_price': cart_item.book.price * cart_item.quantity,
+    }
+    return JsonResponse(data)
+
 
 
 def delete_cart_item(request, cart_item_id):
     cart_item = get_object_or_404(CartItem, pk=cart_item_id)
-
     if request.method == 'POST':
         cart_item.delete()
+        return JsonResponse({'message': 'Cart item deleted successfully.'})
+    
+    return JsonResponse({'message': 'Invalid request.'}, status=400)
 
-    return redirect('cart')
 
 
 def checkout(request):
@@ -192,16 +200,22 @@ def payment(request,address_id):
         cart=Cart.objects.get(user=request.user)
         cart_items = CartItem.objects.filter(cart=cart)
         total_price = sum( item.book.price * item.quantity for item in cart_items)
-
+        
+        client=razorpay.Client(auth=("rzp_test_VDPQPNxYzpv9RG","qHyItpczSI5AHn5zzD3vlBbn"))
+        amount=int(total_price * 100)
+        payment=client.order.create({'amount':amount,'currency':'INR','payment_capture':1})
         context = {
             'cart_items': cart_items,
             'total_price': total_price,
-            'address_id' : address_id
+            'address_id' : address_id,
+            'payment':payment
         }
-
+        
+        print(payment)
         return render(request, 'user/payment.html', context)
 
     if request.method == 'POST':
+        
         user = request.user
         cart = Cart.objects.get(user=user)
         cart_items = CartItem.objects.filter(cart=cart)
@@ -233,12 +247,59 @@ def payment(request,address_id):
                 book.save()
                 cart_item.delete()
 
-            # Clear the cart
-            # cart.items.all().delete()
+            # context=
+            # Redirect to order confirmation or success page
+            return redirect('order_confirmation',order_id=order.id)
+def razor(request,address_id):
+    # Assuming you have the necessary logic to retrieve the user's cart items and calculate the total price
+        
+        user = request.user
+        cart = Cart.objects.get(user=user)
+        cart_items = CartItem.objects.filter(cart=cart)
+        address_id = request.POST.get('address_id')
 
+        if address_id:
+            address = Address.objects.get(id=address_id)
+            payment_method = "Cash on Delivery"
+            total_price = sum( item.book.price * item.quantity for item in cart_items)
+
+            # Create an order
+            order = Order.objects.create(
+                user=user,
+                address=address,
+                payment_method=payment_method,
+                total_amount=total_price
+            )
+            print(order.id)
+            # Create order items from cart items and deduct stock quantities
+            for cart_item in cart_items:
+                book = cart_item.book
+                ordered_quantity = cart_item.quantity
+                OrderItem.objects.create(
+                    order=order,
+                    book=book,
+                    quantity=ordered_quantity
+                )
+                book.stock -= ordered_quantity
+                book.save()
+                cart_item.delete()
+
+            # context=
             # Redirect to order confirmation or success page
             return redirect('order_confirmation',order_id=order.id)
         
+
+def get_coupon_details(request, coupon_code):
+    try:
+        coupon = Coupon.objects.get(coupon_code=coupon_code)
+        coupon_details = {
+            'discount_type': coupon.discount_type,
+            'discount_amount': coupon.discount,
+        }
+        return JsonResponse(coupon_details)
+    except Coupon.DoesNotExist:
+        return JsonResponse({'error': 'Coupon not found'}, status=400)
+
 
 def order_confirmation(request,order_id):
     # Get the order ID from the request or session

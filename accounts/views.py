@@ -83,7 +83,7 @@ def user_login(request):
 
         user = authenticate(request, username =username, password=password)
 
-        if user is not None:
+        if user:
             if user.is_active:
                 auth_login(request, user)
                 # Redirect to a success page or homepage after successful login
@@ -92,6 +92,7 @@ def user_login(request):
                 messages.error(request, 'Your account is not active.')
         else:
             messages.error(request, 'Invalid email or password.')
+            return render(request, 'auth/login.html')
     else:  
      return render(request, 'auth/login.html')
  
@@ -120,6 +121,9 @@ def admin_login(request):
 def admlogout(request):
     logout(request) 
     return redirect('admlogin')
+def userlogout(request):
+    logout(request) 
+    return render(request,'auth/login.html')
 def test(request):
     
     return render(request,"user/index.html")
