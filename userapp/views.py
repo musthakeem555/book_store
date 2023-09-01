@@ -9,9 +9,10 @@ from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from .models import Cart, CartItem ,Order,Address,OrderItem
-from admin_side.models import Book
+from admin_side.models import Book,Coupon
 import razorpay
 from django.conf import settings
+from django.utils import timezone
 
 
 # Create your views here.
@@ -208,7 +209,10 @@ def payment(request,address_id):
             'cart_items': cart_items,
             'total_price': total_price,
             'address_id' : address_id,
-            'payment':payment
+            'payment':payment,
+            'new_total_price':total_price,
+            'discount':0
+            
         }
         
         print(payment)
@@ -250,9 +254,41 @@ def payment(request,address_id):
             # context=
             # Redirect to order confirmation or success page
             return redirect('order_confirmation',order_id=order.id)
+from django.http import JsonResponse
+
+
+def apply_coupon(request, address_id):
+    if request.method == 'POST':
+        cart_items = CartItem.objects.filter(cart__user=request.user)
+        total_price = sum( item.book.price * item.quantity for item in cart_items)
+        coupon_code = request.POST.get('coupon_code')
+        try:
+            coupon = Coupon.objects.get(coupon_code=coupon_code, active=True,
+                                        valid_from__lte=timezone.now(),
+                                        valid_to__gte=timezone.now())
+            
+            # Calculate the discount amount based on coupon details
+            if coupon.discount_type == 'amount':
+                discount = coupon.discount
+            elif coupon.discount_type == 'percentage':
+                discount = (coupon.discount / 100) * total_price
+            else:
+                discount = 0
+            
+            # Calculate the new total price after applying the discount
+            new_total_price = total_price - discount
+            
+            # Render the template with the new total price and discount
+            return render(request, 'user/payment.html', {'total_price':total_price,'new_total_price': new_total_price, 'discount': discount,'address_id' : address_id,})
+        
+        except Coupon.DoesNotExist:
+            # Coupon is not valid, render template with an error message
+            return render(request, 'user/payment.html', {'error_message': 'Invalid coupon code','address_id' : address_id,})
+
+        
 def razor(request,address_id):
     # Assuming you have the necessary logic to retrieve the user's cart items and calculate the total price
-        
+
         user = request.user
         cart = Cart.objects.get(user=user)
         cart_items = CartItem.objects.filter(cart=cart)

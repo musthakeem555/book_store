@@ -33,6 +33,7 @@ urlpatterns = [
     path('cart/delete/<int:cart_item_id>/', views.delete_cart_item, name='delete_cart_item'),
     path('cart/checkout/', views.checkout, name='checkout'),
     path('payment/<int:address_id>', views.payment, name='payment'),
+    path('apply_coupon/<int:address_id>/', views.apply_coupon, name='apply_coupon'),
     path('razorpay/<int:address_id>', views.razor, name='razorpay'),
     path('order_confirmation/<int:order_id>/', views.order_confirmation, name='order_confirmation'),
     path('profile/', views.user_profile, name='user_profile'),
