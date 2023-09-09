@@ -28,7 +28,7 @@ urlpatterns = [
     path('logout',views.userlogout,name='logout'),
     path('forgotPass',views.forgot_pass,name='forgotPass'),
     path('forgotPass_otpVerify/<int:id>,<str:phone>,<str:password>',views.forgotPass_otpVerify,name='forgotPass_otpVerify'),
-    
+    path('reset_pass/', views.reset_password, name='reset_pass'),
     path('test',views.test,name='test')
 ]
  

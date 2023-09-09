@@ -172,8 +172,7 @@ def editbook(request, id):
 
 def order_management(request):
     # Retrieve all order items
-    order_items = OrderItem.objects.all()   
-    print(order_items)
+    order_items = OrderItem.objects.all().order_by('-id')   
     # Retrieve all order statuses for the drop-down menu
     statuses = order_status.objects.all()
     if request.method == 'POST':

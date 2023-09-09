@@ -54,7 +54,7 @@ PROFILE
                 <div class="d-inline-flex p-2"
                     style="background-color: rgb(255, 255, 255); width: 260px; height: 60px; border-top: 0.3px solid rgb(235, 215, 215);">
                     <i class="bi bi-box ms-3" style="font-size: 28px; color: rgb(65, 65, 184);"></i>
-                    <h6 style="margin-left: 25px; margin-top: 10px; color: rgb(146, 149, 152);">MY STUFFS</h6>
+                    <a href="/reset_pass"><h6 style="margin-left: 25px; margin-top: 10px; color: rgb(146, 149, 152);">Reset password</h6></a>
                 </div>
                 <div class="d-inline-flex p-2 d-flex justify-content-center"
                     style="background-color: rgb(255, 255, 255); width: 260px; height: 60px;">
@@ -101,6 +101,9 @@ PROFILE
                           <input type="text" class="form-control mt-3" style="width: 300px;" id="phone" name="phone" value="{{ request.user.phone_number}}" placeholder="+91" required readonly>
                       </div>
                   </div>
+                  
+                  <p class="d-inline-flex me-5">Wallet Balance: ${{ wallet_balance }}</p>
+                
                   <div class="mt-4 ms-5">
                       <button type="submit" class="btn btn-outline-dark btn-black-hover btn-custom">Submit</button>
                   </div>

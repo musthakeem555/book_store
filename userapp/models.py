@@ -44,3 +44,10 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.quantity}x {self.book.title} in order {self.order.id}"
+
+class wallet(models.Model):
+    user = models.ForeignKey(user_details, on_delete=models.CASCADE)
+    balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    def __str__(self):
+        return f"wallet for {self.user.username}"  
+  

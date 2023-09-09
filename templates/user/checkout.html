@@ -19,11 +19,13 @@
                                     <input type="radio" style="color: black ;" name="selected_address" value="{{ address.id }}">
                                     {{ address.street }}, {{ address.city }}, {{ address.state }}, {{ address.postal_code }}
                                 </label>
-                                <a href="{% url 'edit_address' address.id %}" class="btn btn-outline-dark btn-black-hover btn-custom">Edit</a>
+                                <a href="{% url 'edit_address' address.id %}?next={% url 'checkout' %}" class="btn btn-outline-dark btn-black-hover btn-custom">Edit</a>
+
                             </li>
                         {% endfor %}
                     </ul>
-                    <a href="{% url 'add_address' %}" class="btn btn-outline-dark btn-black-hover btn-custom mt-3 mb-4">Add New Address</a>
+                    <a href="{% url 'add_address' %}?next={% url 'checkout' %}" class="btn btn-outline-dark btn-black-hover btn-custom mt-3 mb-4">Add New Address</a>
+
                 </div>
                 <div class="col-md-5">
                     <h5 class="mb-3">Order Summary</h5>

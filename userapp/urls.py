@@ -34,13 +34,15 @@ urlpatterns = [
     path('cart/checkout/', views.checkout, name='checkout'),
     path('payment/<int:address_id>', views.payment, name='payment'),
     path('apply_coupon/<int:address_id>/', views.apply_coupon, name='apply_coupon'),
-    path('razorpay/<int:address_id>', views.razor, name='razorpay'),
-    path('order_confirmation/<int:order_id>/', views.order_confirmation, name='order_confirmation'),
+    path('razorpay/<int:address_id>/<str:new_total_price/', views.razor, name='razorpay'),
+    path('order_confirmation/<int:order_id>/<str:discount>/', views.order_confirmation, name='order_confirmation'),
     path('profile/', views.user_profile, name='user_profile'),
     path('logout/', LogoutView.as_view(next_page='booklist'), name='logout'),
     path('cancel_order/<int:order_id>/', views.cancel_order, name='cancel_order'),
     path('my_orders/', views.my_orders, name='my_orders'),
     path('api/coupon/<str:coupon_code>/', views.get_coupon_details, name='get_coupon_details'),
+    path('search/',views.search,name='search'),
+    path('catgry_search/',views.catgry_search,name='catgry_search')
 
 ]
 

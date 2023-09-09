@@ -1,8 +1,13 @@
 {% extends 'user/base.html' %}
+{% load static %}
+{% block additional_css %}
+<!-- Additional CSS specific to the cart page -->
+<link rel="stylesheet" type="text/css" href="{% static 'css/cart.css' %}" />
+{% endblock %}
 
 {% block content %}
-<div class="container mt-5 ml-5 mb-4" style="color: black;">
-  <h2>Edit Address</h2>
+<div class="container p-3" style="color: black; border: 1px solid black;margin-top: 100px;margin-left: 20px;margin-right: 20px;margin-bottom: 20px;">
+  <h2 class="text-center">Edit Address</h2>
   <form method="post" class="mt-4">
     {% csrf_token %}
     <div class="form-group">
@@ -20,9 +25,10 @@
     <div class="form-group">
       <label for="postal_code">Postal Code:</label>
       <input type="text" id="postal_code" name="postal_code" class="form-control" value="{{ address.postal_code }}" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Save</button>
-    <a href="{% url 'address_list' %}" class="btn btn-secondary">Cancel</a>
+    </div >
+    <div class="text-center"><button type="submit" class="btn btn-outline-dark btn-black-hover btn-custom">Save</button>
+      <a href="{% url 'address_list' %}" class="btn btn-outline-dark btn-black-hover btn-custom">Cancel</a></div>
+    
   </form>
 </div>
 {% endblock %}

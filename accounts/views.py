@@ -175,3 +175,35 @@ def forgotPass_otpVerify(request,id,phone,password):
             return redirect("login")
     else:
         return render(request,'auth/forgotPass_otp.html')
+
+def reset_password(request):
+    if request.method == 'POST':
+        user = request.user
+        current_password = request.POST.get('current_password')
+        new_password = request.POST.get('new_password1')
+        confirm_password = request.POST.get('new_password2')
+
+        # Check if the current password is correct
+        if user.check_password(current_password):
+            # Check if the new passwords match
+            if new_password == confirm_password:
+                # Set the new password
+                user.set_password(new_password)
+                user.save()
+
+                # Log the user in with the new password
+                user = authenticate(username=user.username, password=new_password)
+                if user:
+                    login(request, user)
+
+                messages.success(request, 'Password successfully reset.')
+                return redirect('home')
+            else:
+                messages.error(request, 'New passwords do not match. Please try again.')
+        else:
+            messages.error(request, 'Current password is incorrect. Please try again.')
+
+    return render(request, 'auth/reset_pass.html')
+
+
+    
