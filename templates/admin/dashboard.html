@@ -1,0 +1,117 @@
+{% extends 'admin/admbase.html' %}
+
+{% block title %}Dashboard{% endblock title %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Monthly Sales Line Chart -->
+            <div class="card">
+                <div class="card-header">
+                    Monthly Sales
+                </div>
+                <div class="card-body">
+                    <canvas id="monthlySalesChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+            <!-- Monthly Sales Card -->
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h5 class="card-title">Total Earnings</h5>
+                    <p class="card-text">Total earnings for this month: ${{ monthly_sales_total }}</p>
+                    <p class="card-text">
+                        Change from last month: 
+                        {% if monthly_change_percentage > 0 %}
+                            +{{ monthly_change_percentage|floatformat:"2" }}%
+                        {% elif monthly_change_percentage < 0 %}
+                            {{ monthly_change_percentage|floatformat:"2" }}%
+                        {% else %}
+                            No change
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <!-- Yearly Sales Bar Chart -->
+            <div class="card">
+                <div class="card-header">
+                    Yearly Sales
+                </div>
+                <div class="card-body">
+                    <canvas id="yearlySalesChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+            <!-- Yearly Sales Card -->
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h5 class="card-title">Total Earnings</h5>
+                    <p class="card-text">Total earnings for this year: ${{ yearly_sales_total }}</p>
+                    <p class="card-text">
+                        Change from last year: 
+                        {% if yearly_change_percentage > 0 %}
+                            +{{ yearly_change_percentage|floatformat:"2" }}%
+                        {% elif yearly_change_percentage < 0 %}
+                            {{ yearly_change_percentage|floatformat:"2" }}%
+                        {% else %}
+                            No change
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Monthly Sales Chart -->
+<script>
+    const monthlySalesCtx = document.getElementById('monthlySalesChart');
+
+    new Chart(monthlySalesCtx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+            datasets: [{
+                label: 'Monthly Sales',
+                data: [1000, 1500, 2000, 1800, 2200, 2500, 2800, 3000],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+<!-- Yearly Sales Bar Chart -->
+<script>
+    const yearlySalesCtx = document.getElementById('yearlySalesChart');
+
+    new Chart(yearlySalesCtx, {
+        type: 'bar',
+        data: {
+            labels: ['2023', '2024', '2025', '2026', '2027'],
+            datasets: [{
+                label: 'Yearly Sales',
+                data: [12000, 14500, 17500, 19800, 22000],
+                backgroundColor: 'rgba(65, 65, 184, 0.6)',
+                borderColor: 'rgba(65, 65, 184, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+{% endblock body %}

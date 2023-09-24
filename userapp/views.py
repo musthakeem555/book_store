@@ -23,15 +23,17 @@ from django.urls import reverse
 def index(request):
     return redirect('booklist')
 
+
+
 def book_list(request):
     # Get the sorting criteria from the query parameters
-    categories=Category.objects.all()
     sort_criteria = request.GET.get('sort', 'default')
     category_filter = request.GET.get('category')
+
     # Define a dictionary to map sorting criteria to database fields
     sort_mapping = {
-        'default': 'id',  # Change 'id' to the default sorting field
-        'newness': '-created_at',  # Replace 'created_at' with your date field
+        'default': 'id',
+        'newness': '-created_at',
         'price_low_to_high': 'price',
         'price_high_to_low': '-price',
     }
@@ -39,22 +41,41 @@ def book_list(request):
     # Get the corresponding database field for the selected sorting criteria
     sort_field = sort_mapping.get(sort_criteria, 'id')
 
-
-
     # Query the books and apply sorting
     books = Book.objects.all().order_by(sort_field)
+    categories = Category.objects.all()
+    # Apply category filtering if a category is selected
     if category_filter:
-    # Filter products by category
-        books = Book.objects.filter(category=category_filter)
+        books = books.filter(category=category_filter)
 
     context = {
         'books': books,
-        'sort_criteria': sort_criteria, 
-        'categories':categories
-        # Pass the selected criteria to the template
+        'sort_criteria': sort_criteria,
+        'selected_category': category_filter,  # Pass the selected category to the template
+        'categories': categories
     }
 
     return render(request, 'user/booklist.html', context)
+
+def search(request):
+    # Get the search query from the URL's query parameters
+    search_query = request.GET.get('q', '')
+
+    # Implement your search logic here using Q objects
+    search_results = Book.objects.filter(
+        Q(title__icontains=search_query) |
+        Q(author__icontains=search_query) |
+        Q(description__icontains=search_query) |
+        Q(category__name__icontains=search_query)  # If you want to search by category name
+    )
+
+    context = {
+        'books': search_results,
+        'search_query': search_query,
+    }
+
+    return render(request, 'user/booklist.html', context)
+
 
 
 def book_detail(request, book_id):
@@ -143,7 +164,8 @@ def add_to_cart(request, book_id):
     # Check if the selected Book is already in the user's cart.
     cart_item, item_created = CartItem.objects.get_or_create(cart=cart, book=book)
 
-    # If the item already exists in the cart, increase the quantity by 1.
+    # If the item already exists in the cart, increase the quantity by 1.  
+    messages.success(request, f"{book.title} has been added to your cart successfully.")
     if not item_created:
         cart_item.quantity += 1
         cart_item.save()
@@ -310,7 +332,7 @@ def apply_coupon(request, address_id):
             if total_price < coupon.minimum_amount:
                 return render(request, 'user/payment.html', {'error_message': 'Total price is less than the minimum amount required for this coupon', 'address_id': address_id})
             
-            # Calculate the discount amount based on coupon details
+            # Calculate the discount amount based on 
             if coupon.discount_type == 'amount':
                 discount = coupon.discount
             elif coupon.discount_type == 'percentage':
@@ -337,7 +359,6 @@ def razor(request,address_id,new_total_price):
         cart = Cart.objects.get(user=user)
         cart_items = CartItem.objects.filter(cart=cart)
         new_total_price=float(new_total_price)
-        discount=float(discount)
 
         if address_id:
             address = Address.objects.get(id=address_id)
@@ -378,18 +399,25 @@ def get_coupon_details(request, coupon_code):
         return JsonResponse({'error': 'Coupon not found'}, status=400)
 
 
-def order_confirmation(request,order_id,discount):
+def order_confirmation(request,order_id):
     # Get the order ID from the request or session
 
     # Retrieve the order details, including order items
     order = Order.objects.get(id=order_id)
     order_items = OrderItem.objects.filter(order=order_id)
-    discount=float(discount)
+    total_price = sum(cart_item.book.price * cart_item.quantity for cart_item in order_items)
+    off=total_price - order.total_amount
+    # try:
+    #    offer=other.objects.get(user=request.user)
+    #    off=offer.discount
+    #    offer.delete()
+    # except:
+    #     off = 0    
 
     context = {
         'order': order,
         'order_items': order_items,
-        'discount' :discount
+        'off':off
     }
 
     return render(request, 'user/confirmation.html', context)
@@ -401,9 +429,13 @@ def user_profile(request):
     # Check if the user has a wallet
     
     wallet_balance = None
-    walet= wallet.objects.get(user=user)
-    if walet:
-        wallet_balance=walet.balance
+    
+    try:
+        wallet_obj = wallet.objects.get(user=user)
+        wallet_balance = wallet_obj.balance
+    except wallet.DoesNotExist:
+        # Handle the case where the wallet doesn't exist for the user
+        wallet_balance = 0
     
     print(wallet_balance)
     context = {
@@ -415,6 +447,54 @@ def user_profile(request):
 
 
   # Import the Wallet model
+  
+def my_orders(request):
+    user = request.user
+    order_items = OrderItem.objects.filter(order__user=user).order_by('-order__order_date')
+
+    context = {
+        'order_items': order_items
+    }
+    return render(request, 'user/my_orders.html', context)
+
+
+def order_detail(request, order_item_id):
+    order_item = get_object_or_404(OrderItem, id=order_item_id)
+    
+    context = {
+        'order_item': order_item
+    }
+    
+    return render(request, 'user/order_detail.html', context)  
+
+from django.shortcuts import render, get_object_or_404
+from .models import Order
+
+def order_invoice(request, order_id):
+    # Get the order and related data from the database
+    order = get_object_or_404(Order, id=order_id)
+    user = order.user
+    shipping_address = order.address  # Assuming the address is stored in the Order model
+    order_items = order.items.all() # Assuming you have a related name set in the OrderItem model
+    coupon_discount = 0  # You can retrieve this value from the order or elsewhere
+    shipping_charge = 0  # You can retrieve this value from the order or elsewhere
+
+    # Calculate the total price of the ordered items
+    total_price = sum(order_item.book.price * order_item.quantity for order_item in order_items)
+
+    # Render the invoice template with the data
+    context = {
+        'order': order,
+        'user': user,
+        'shipping_address': shipping_address,
+        'order_items': order_items,
+        'coupon_discount': coupon_discount,
+        'shipping_charge': shipping_charge,
+        'total_price': total_price,
+    }
+
+    return render(request, 'user/order_invoice.html', context)
+
 
 def cancel_order(request, order_id):
     try:
@@ -454,33 +534,12 @@ def cancel_order(request, order_id):
 
 
 
-def my_orders(request):
-    user = request.user
-    order_items = OrderItem.objects.filter(order__user=user).order_by('-order__order_date')
 
-    context = {
-        'order_items': order_items
-    }
-    return render(request, 'user/my_orders.html', context)
 
-def search(request):
-    # Get the search query from the URL's query parameters
-    search_query = request.GET.get('q', '')
 
-    # Implement your search logic here using Q objects
-    search_results = Book.objects.filter(
-        Q(title__icontains=search_query) |
-        Q(author__icontains=search_query) |
-        Q(description__icontains=search_query) |
-        Q(category__name__icontains=search_query)  # If you want to search by category name
-    )
 
-    context = {
-        'books': search_results,
-        'search_query': search_query,
-    }
 
-    return render(request, 'user/booklist.html', context)
+
 
 
         

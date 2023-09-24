@@ -6,9 +6,11 @@ from .models import Category,order_status
 from django.http import HttpResponse
 from .models import Book
 from django.shortcuts import get_object_or_404
-from userapp.models import OrderItem
+from userapp.models import OrderItem,Order
 from django.utils import timezone
 from .models import Coupon
+import random
+from datetime import date, timedelta
 
 def admhome(request):
     return render(request,'admin/admbase.html')
@@ -268,7 +270,97 @@ def delete_coupon(request, id):
         return redirect('coupon')  # Redirect to the coupon list page
     except Coupon.DoesNotExist:
         return render(request, 'admin/error.html', {'error_message': 'Coupon not found'})  # Handle error case
-       
+
+from django.shortcuts import render
+
+def dashboard(request):
+    # Replace the following with your actual data retrieval logic
+    monthly_sales = [1000, 1500, 2000, 1800, 2200, 2500, 2800, 3000]
+    yearly_sales = [12000, 14500, 17500, 19800, 22000]
+
+    monthly_sales_total = sum(monthly_sales)
+    yearly_sales_total = sum(yearly_sales)
+    last_month_total = monthly_sales[-2] if len(monthly_sales) >= 2 else 0
+    last_year_total = yearly_sales[-2] if len(yearly_sales) >= 2 else 0
+
+    if last_month_total > 0:
+        monthly_change_percentage = ((monthly_sales[-1] - last_month_total) / last_month_total) * 100
+    else:
+        monthly_change_percentage = 0
+
+    if last_year_total > 0:
+        yearly_change_percentage = ((yearly_sales[-1] - last_year_total) / last_year_total) * 100
+    else:
+        yearly_change_percentage = 0
+
+    context = {
+        'monthly_sales': monthly_sales,
+        'yearly_sales': yearly_sales,
+        'monthly_sales_total': monthly_sales_total,
+        'yearly_sales_total': yearly_sales_total,
+        'monthly_change_percentage': monthly_change_percentage,
+        'yearly_change_percentage': yearly_change_percentage,
+    }
+
+
+    return render(request, 'admin/dashboard.html', context)
+
+
+# Sample book titles
+books_and_prices = {
+    'Crime and Punishment': 20,
+    'Dracula': 25,
+    'Pride and Prejudice': 30,
+    'To Kill a Mockingbird': 35,
+    'The Great Gatsby': 40,
+}
+
+from datetime import date, timedelta, datetime
+import random
+
+def sales_report(request):
+    # Get start_date and end_date query parameters from the URL
+    start_date_str = request.GET.get('start_date', '')
+    end_date_str = request.GET.get('end_date', '')
+
+    # Convert query parameter strings to datetime objects
+    start_date = datetime.strptime(start_date_str, '%Y-%m-%d') if start_date_str else date.today() - timedelta(days=365)
+    end_date = datetime.strptime(end_date_str, '%Y-%m-%d') if end_date_str else date.today()
+
+    # Generate sample order data for the specified date range
+    orders = []
+    for order_id in range(1, 30):  # Adding an order_id field
+        order_date = start_date + timedelta(days=random.randint(0, (end_date - start_date).days))
+        book = random.choice(list(books_and_prices.keys()))  # Choose a book title randomly
+        quantity = random.randint(1, 10)
+        price = books_and_prices[book]  # Retrieve the price for the chosen book
+        discount = random.choice([0, 10, 20])  # Adding a discount field
+        total = quantity * price * (1 - discount / 100)  # Calculate total after applying discount
+        orders.append({
+            'order_id': order_id,
+            'order_date': order_date,
+            'book': book,
+            'quantity': quantity,
+            'price': price,
+            'discount': discount,
+            'total': int(total),  # Convert total to an integer to remove decimal values
+        })
+
+    # Sort orders by order date
+    orders.sort(key=lambda x: x['order_date'])
+
+    context = {
+        'orders': orders,
+        'start_date': start_date,
+        'end_date': end_date,
+    }
+
+    return render(request, 'admin/sales_report.html', context)
+
+
+
+
+  
 
     
 

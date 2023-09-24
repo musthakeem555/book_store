@@ -1,0 +1,67 @@
+{% extends 'user/base.html' %}
+{% load static %}
+{% block additional_css %}
+    <!-- Additional CSS specific to the order item detail page -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/cart.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="px-3 pb-3 m-5" >
+        <div class="container py-4 m-5"
+             style="
+                    padding-left: 40px;
+                    padding-right: 40px;">
+            <h3 class="text-center"
+                style="margin-left: 25px;
+                       margin-top: 90px;
+                       margin-bottom: 20px;
+                       color: rgb(0, 0, 0)">Order Details</h3>
+            <div class="row p-5" style="border: 1px solid black;">
+                <div class="col-md-3">
+                    <!-- Image Column -->
+                    <img src="{{ order_item.book.cover_image.url }}"
+                         alt="{{ order_item.book.title }}"
+                         class="order-item-image img-fluid"
+                         style="max-width: 200px;"> <!-- Added max-width -->
+                         <div><h5>{{ order_item.book.title }}</h5></div>
+                         <div class="order-item-author"><strong>Author:</strong> {{ order_item.book.author }}</div>
+                </div>
+                <div class="col-md-5">
+                    <!-- Details Column (excluding address) -->
+                    
+                    <div class="order-item-info">
+                        <div class="order-item-status"><strong>Order Status:</strong> {{ order_item.order_status }}</div>
+                        <div class="order-item-date"><strong>Ordered Date:</strong> {{ order_item.order.order_date }}</div>
+                        <!-- Other Details -->
+                        
+                        <div class="order-item-price"><strong>Price:</strong> ${{ order_item.book.price }}</div>
+                        <div class="order-item-quantity"><strong>Quantity:</strong> {{ order_item.quantity }}</div>
+                        <div class="order-item-payment"><strong>Payment Method:</strong> {{ order_item.order.payment_method }}</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <!-- Address Column -->
+                    <div class="order-item-address">
+                        <strong>Shipping Address:</strong><br>
+                        <span>Street: {{ order_item.order.address.street }}</span><br>
+                        <span>City: {{ order_item.order.address.city }}</span><br>
+                        <span>State: {{ order_item.order.address.state }}</span><br>
+                        <span>Postal Code: {{ order_item.order.address.postal_code }}</span>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <!-- Cancel Button Column -->
+                    {% if order_item.order_status.order_status == 'Order Placed' or order_item.order_status.order_status == 'Order Shipped' %}
+                        <form method="post" action="{% url 'cancel_order' order_item.pk %}" class="mt-3">
+                            {% csrf_token %}
+                            <button type="submit"
+                                    class="btn btn-sm btn-outline-dark btn-black-hover btn-cancel">Cancel Order</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="text-center">
+            <a href="{% url 'order_invoice' order_item.order.id %}" class="btn btn-outline-dark btn-black-hover btn-custom mt-3">Order Invoice</a>
+        </div>
+    </div>
+{% endblock %}

@@ -123,7 +123,7 @@ def admlogout(request):
     return redirect('admlogin')
 def userlogout(request):
     logout(request) 
-    return render(request,'auth/login.html')
+    return redirect('login')
 def test(request):
     
     return render(request,"user/index.html")
@@ -194,7 +194,7 @@ def reset_password(request):
                 # Log the user in with the new password
                 user = authenticate(username=user.username, password=new_password)
                 if user:
-                    login(request, user)
+                    auth_login(request, user)
 
                 messages.success(request, 'Password successfully reset.')
                 return redirect('home')

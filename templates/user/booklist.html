@@ -1,248 +1,160 @@
 {% extends 'user/base.html' %}
 {% load static %}
 {% block additional_css %}
-    <link rel="stylesheet" href="{% static 'css/booklist.css' %}">
+<link rel="stylesheet" href="{% static 'css/booklist.css' %}">
 {% endblock %}
 
+<!-- Product -->
+{% block content %}
+<section class="section-slide" style="margin-top: 70px;">
+    <div class="wrap-slick1">
+        <div class="slick1">
+            <div class="item-slick1" style=" background-image: url({% static 'images\banners\00292356-1920x533.jpg' %});">
+                <div class="container h-full">
+                    <div class="flex-col-l-m h-full p-t-100 p-b-30 respon5">
+                        <div class="layer-slick1 animated visible-false" data-appear="fadeInDown" data-delay="0"></div>
+                        <div class="layer-slick1 animated visible-false" data-appear="fadeInUp" data-delay="800"></div>
+                        <div style="position: relative; left: 57%; top: 60px;">
+                            <button type="button"
+                                class="btn " style="background-color: rgba(203, 167, 21, 0.903); color: white; font-weight: 500;border-radius: 20px; border: 1px solid rgb(255, 255, 255); width: 120px;">SHOP NOW</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-	<!-- Product -->
-	{% block content %}
+<div class=" m-t-23 p-b-140" style="height: 100%;">
+    <div class="container">
+        <div style="margin-top: 80px;">
+            <div class="flex-w flex-l-m filter-tope-group m-tb-10">
+                <div class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4 js-show-filter">
+                    <i class="icon-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-filter-list"></i>
+                    <i class="icon-close-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
+                    Filter
+                </div>
 
-	<section class="section-slide" style="margin-top: 70px;">
-		<div class="wrap-slick1">
-			<div class="slick1">
-				<div class="item-slick1" style=" background-image: url({% static 'images\banners\00292356-1920x533.jpg' %});">
-					<div class="container h-full">
-						<div class="flex-col-l-m h-full p-t-100 p-b-30 respon5">
-							<div class="layer-slick1 animated visible-false" data-appear="fadeInDown" data-delay="0">
-								
-							</div>
-								
-							<div class="layer-slick1 animated visible-false" data-appear="fadeInUp" data-delay="800">
-								
-							</div>
-								
-							<div style="position: relative; left: 57%; top: 60px;">
-								<button type="button" class="btn " style="background-color: rgba(203, 167, 21, 0.903); color: white; font-weight: 500;border-radius: 20px; border: 1px solid rgb(255, 255, 255); width: 120px;">SHOP NOW</button>
-								
-							</div>
+                <div class="flex-c-m stext-106 cl6 size-105 bor4 pointer hov-btn3 trans-04 m-tb-4 js-show-search">
+                    <i class="icon-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-search"></i>
+                    <i class="icon-close-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
+                    Search
+                </div>
+            </div>
+
+            <!-- Search product -->
+            <form action="{% url 'search' %}" method="GET">
+                <div class="bor8 dis-flex p-l-15">
+                    <button type="submit" class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
+                        <i class="zmdi zmdi-search"></i>
+                    </button>
+                    <input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="q" placeholder="Search">
+                </div>
+            </form>
+
+            <!-- Filter -->
+            <div class="dis-none panel-filter w-full p-t-10">
+                <div class="wrap-filter flex-w bg6 w-full p-lr-40 p-t-27 p-lr-15-sm">
+                    <div class="filter-col1 p-r-15 p-b-27">
+						<div class="mtext-102 cl2 p-b-15">
+							Sort By
 						</div>
-					</div>
-				</div>
-	
-				
-	
-				
-			</div>
-		</div>
-	</section>
-
-
-
-	<div class=" m-t-23 p-b-140" style="height: 100%;">
-		<div class="container">
-			<div  style="margin-top: 80px;">
-				<div class="flex-w flex-l-m filter-tope-group m-tb-10">
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 how-active1" data-filter="*">
-						All Products
-					</button>
-
-					{% comment %} <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".women">
-						Women
-					</button>
-
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".men">
-						Men
-					</button>
-
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".bag">
-						Bag
-					</button>
-
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".shoes">
-						Shoes
-					</button>
-
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".watches">
-						Watches
-					</button> {% endcomment %}
-				</div>
-
-				<div class="flex-w flex-c-m m-tb-10">
-					<div class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4 js-show-filter">
-						<i class="icon-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-filter-list"></i>
-						<i class="icon-close-filter cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
-						 Filter
-					</div>
-
-					<div class="flex-c-m stext-106 cl6 size-105 bor4 pointer hov-btn3 trans-04 m-tb-4 js-show-search">
-						<i class="icon-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-search"></i>
-						<i class="icon-close-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
-						Search
-					</div>
-				</div>
-				
-				<!-- Search product -->
-				<form action="{% url 'search' %}" method="GET">
-					<div class="bor8 dis-flex p-l-15">
-						<button type="submit" class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
-							<i class="zmdi zmdi-search"></i>
-						</button>
-						<input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="q" placeholder="Search">
-					</div>
-				</form>
-				
-
-				<!-- Filter -->
-				<div class="dis-none panel-filter w-full p-t-10">
-					<div class="wrap-filter flex-w bg6 w-full p-lr-40 p-t-27 p-lr-15-sm">
-						<div class="filter-col1 p-r-15 p-b-27">
-							<div class="mtext-102 cl2 p-b-15">
-								Sort By
-							</div>
-
-							<ul>
-								<li class="p-b-6">
-									<a href="?sort=default" class="filter-link stext-106 trans-04">
-										Default
-									</a>
-								</li>
-							
-								<li class="p-b-6">
-									<a href="?sort=newness" class="filter-link stext-106 trans-04">
-										Newness
-									</a>
-								</li>
-							
-								<li class="p-b-6">
-									<a href="?sort=price_low_to_high" class="filter-link stext-106 trans-04">
-										Price: Low to High
-									</a>
-								</li>
-							
-								<li class="p-b-6">
-									<a href="?sort=price_high_to_low" class="filter-link stext-106 trans-04">
-										Price: High to Low
-									</a>
-								</li>
-							</ul>
-							
-						</div>
-
-						<!-- <div class="filter-col2 p-r-15 p-b-27">
-							<div class="mtext-102 cl2 p-b-15">
-								Price
-							</div>
-
-							<ul>
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04 filter-link-active">
-										All
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										$0.00 - $50.00
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										$50.00 - $100.00
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										$100.00 - $150.00
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										$150.00 - $200.00
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="#" class="filter-link stext-106 trans-04">
-										$200.00+
-									</a>
-								</li>
-							</ul>
-						</div> -->
-
-						
-						<div class="filter-col4 p-b-27">
-							<div class="mtext-102 cl2 p-b-15">
-								Categories
-							</div>
-
-							<div class="flex-w p-t-4 m-r--5">
-								{% for category in categories %}
-								<a href="?category={{ category.id }}" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									{{ category.name }}
+			
+						<ul>
+							<li class="p-b-6">
+								<a href="?sort=default{% if selected_category %}&category={{ selected_category }}{% endif %}" class="filter-link stext-106 trans-04">
+									Default
 								</a>
-								{% endfor %}
-							</div>
-						</div>
+							</li>
+			
+							<li class="p-b-6">
+								<a href="?sort=newness{% if selected_category %}&category={{ selected_category }}{% endif %}" class="filter-link stext-106 trans-04">
+									Newness
+								</a>
+							</li>
+			
+							<li class="p-b-6">
+								<a href="?sort=price_low_to_high{% if selected_category %}&category={{ selected_category }}{% endif %}" class="filter-link stext-106 trans-04">
+									Price: Low to High
+								</a>
+							</li>
+			
+							<li class="p-b-6">
+								<a href="?sort=price_high_to_low{% if selected_category %}&category={{ selected_category }}{% endif %}" class="filter-link stext-106 trans-04">
+									Price: High to Low
+								</a>
+							</li>
+						</ul>
 					</div>
-				</div>
-			</div>
-			<div class="mtext-102 cl2 p-b-15">
+
+                    <div class="filter-col4 p-b-27">
+                        <div class="mtext-102 cl2 p-b-15">
+                            Categories
+                        </div>
+
+                        <div class="flex-w p-t-4 m-r--5">
+                            <div class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4">
+                                <a href="?category=" class="{% if not selected_category %}how-active1{% endif %}" data-filter="*">
+                                    All Categories
+                                </a>
+                            </div>
+
+                            {% for category in categories %}
+                            <div class="flex-c-m stext-106 cl6 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4">
+                                <a href="?category={{ category.id }}"
+                                    class="{% if category.id == selected_category %}how-active1{% endif %}" data-filter=".{{ category.slug }}">
+                                    {{ category.name }}
+                                </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mtext-102 cl2 p-b-15">
                 Sort By: {{ sort_criteria }}
             </div>
-			<div class="row isotope-grid mb-5">
-				{% if  books %}
-				{% for book in books %}
-				<div class="col-sm-6 col-md-6 col-lg-3 p-b-35 isotope-item women">
-					<!-- Block2 -->
-					<div class="block2">
-						<div class="block2-pic hov-img0 d-flex justify-content-between">
-							<img src="{{ book.cover_image.url }}" alt="Book Cover Image">
-			
-							<!-- <a href="{% url 'book_detail' book.id %}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
-								Quick View
-							</a> -->
-						</div>
-			
-						<div class="block2-txt flex-w flex-t p-t-14">
-							<div class="block2-txt-child1 flex-col-l">
-								<a href="{% url 'book_detail' book.id %}" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6" style="color: black;">
-									{{ book.title }}
-								</a>
-								
-			
-								<span class="stext-105 cl3">
-									${{ book.price }}
-								</span>
-							</div>
-			
-							<div class="block2-txt-child2 flex-r p-t-3">
-								<a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
-									<img class="icon-heart1 dis-block trans-04" src="{% static 'images/icons/icon-heart-01.png' %}" alt="ICON">
-									<img class="icon-heart2 dis-block trans-04 ab-t-l" src="{% static 'images/icons/icon-heart-02.png' %}" alt="ICON">
 
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-				{% endfor %}
-				{% else %}
-				<div class="col-12" style="display: flex;justify-content: center;">
-					<p>No matching products found.</p>
-				</div>
-			    {% endif %}
+            <div class="row isotope-grid mb-5">
+                {% if books %}
+                {% for book in books %}
+                <div class="col-sm-6 col-md-6 col-lg-3 p-b-35 isotope-item women">
+                    <!-- Block2 -->
+                    <div class="block2">
+                        <div class="block2-pic hov-img0 d-flex justify-content-between">
+                            <img src="{{ book.cover_image.url }}" alt="Book Cover Image">
+                        </div>
 
-			</div>
-	{% endblock  %}
-	
-	
-			
+                        <div class="block2-txt flex-w flex-t p-t-14">
+                            <div class="block2-txt-child1 flex-col-l">
+                                <a href="{% url 'book_detail' book.id %}"
+                                    class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6" style="color: black;">
+                                    {{ book.title }}
+                                </a>
 
-				
-		
+                                <span class="stext-105 cl3">
+                                    ${{ book.price }}
+                                </span>
+                            </div>
 
-	
+                            <div class="block2-txt-child2 flex-r p-t-3">
+                                <a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
+                                    <img class="icon-heart1 dis-block trans-04"
+                                        src="{% static 'images/icons/icon-heart-01.png' %}" alt="ICON">
+                                    <img class="icon-heart2 dis-block trans-04 ab-t-l"
+                                        src="{% static 'images/icons/icon-heart-02.png' %}" alt="ICON">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="col-12" style="display: flex;justify-content: center;">
+                    <p>No matching products found.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endblock %}

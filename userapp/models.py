@@ -51,3 +51,9 @@ class wallet(models.Model):
     def __str__(self):
         return f"wallet for {self.user.username}"  
   
+# class other(models.Model):
+#     user = models.ForeignKey(user_details, on_delete=models.CASCADE)
+#     discount =models.DecimalField(max_digits=10, decimal_places=2, default=0)
+#     def __str__(self):
+#         return f"wallet for {self.user.username}"  
+  

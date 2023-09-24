@@ -10,6 +10,7 @@
   }
 </style>
 {% endblock %} {% load static %} {% block content %}
+
 <section class="sec-product-detail bg0 p-t-65 p-b-60">
   <div class="container" style="margin-top: 100px;">
     <div class="row">
@@ -41,7 +42,7 @@
   </div>
   
   <!-- ... Rest of the code ... -->
-  
+
 
       <div class="col-md-6 col-lg-5 p-b-30">
         <div class="p-r-50 p-t-5 p-lr-0-lg">
@@ -50,7 +51,7 @@
           <span class="mtext-106 cl2"> ${{ book.price }} </span>
 
           <p class="stext-102 cl3 p-t-23">{{ book.description }}</p>
-
+      
           <!--  -->
           <div class="p-t-33">
             <a href="{% url 'add_to_cart' book.id %}">
@@ -61,6 +62,14 @@
               </button>
             </a>
           </div>
+          {% if messages %}
+<ul class="messages mt-2">
+    {% for message in messages %}
+    <li>{{ message.message }}</li>
+
+    {% endfor %}
+</ul>
+{% endif %}
         </div>
       </div>
     </div>
@@ -98,5 +107,11 @@
       });
     });
   });
+</script>
+<script>
+  // Fade out messages after 1000 milliseconds (1 second)
+  setTimeout(function () {
+      $(".messages").fadeOut("slow");
+  }, 5000);
 </script>
 {% endblock script %}

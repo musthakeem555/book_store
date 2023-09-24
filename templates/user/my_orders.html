@@ -5,18 +5,19 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/cart.css' %}">
 {% endblock %}
 {% block content %}
-    <div class="px-3 pb-3" style="border-left: 1px solid black;border-right: 1px solid black;>
+    <div class="px-3 pb-3" >
         <div class="container py-4"
-             style="border-left: 1px solid black;
+             style="
                     padding-left: 40px;
                     padding-right: 40px;
-                    border-right: 1px solid black">
+                    ">
             <h3 class="text-center"
                 style="margin-left: 25px;
                        margin-top: 90px;
                        margin-bottom: 20px;
                        color: rgb(0, 0, 0)">My Order Items</h3>
             {% for order_item in order_items %}
+                <a href="{% url 'order_detail' order_item.id %}" style="color: black;">
                 <div class="order-item d-flex align-items-center justify-content-between mb-3">
                     <img src="{{ order_item.book.cover_image.url }}"
                          alt="{{ order_item.book.title }}"
@@ -36,7 +37,8 @@
                                     style="margin-right: 20px">Cancel</button>
                         </form>
                     {% endif %}
-                </div>  
+                </div>
+            </a>  
             {% endfor %}
         </div>
     </div>
