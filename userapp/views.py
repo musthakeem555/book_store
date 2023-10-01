@@ -315,7 +315,7 @@ def payment(request,address_id):
 
             # context=
             # Redirect to order confirmation or success page
-            return redirect('order_confirmation',order_id=order.id,discount=discount)
+            return redirect('order_confirmation',order_id=order.id)
 
 
 def apply_coupon(request, address_id):
