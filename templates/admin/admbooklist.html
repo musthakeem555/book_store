@@ -2,44 +2,45 @@
 {% block title %}Book List{% endblock title %}
 
 {% block body %}
-    <div class="card">
-        <div class="card-header">
-            <h3 class="mb-0">Book List</h3>
-        </div>
-        <div class="card-body">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Book Cover</th>
-                        <th>Title</th>
-                        <th>Author</th>
-                        <th>Price</th>
-                        <th>Category</th>
-                        <th>Stock</th>
-                        <th>Featured</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for book in books %}
-                        <tr>
-                            <td><img src="{{ book.cover_image.url }}" alt="{{ book.title }}" style="max-width: 100px;"></td>
-                            <td>{{ book.title }}</td>
-                            <td>{{ book.author }}</td>
-                            <td>${{ book.price }}</td>
-                            <td>{{ book.category }}</td>
-                            <td>{{ book.stock }}</td>
-                            <td>{% if book.featured %}Yes{% else %}No{% endif %}</td>
-                            <td>
-                                <a href="{% url 'editbook' book.id %}" class="btn btn-primary btn-sm">Edit</a>
-                                <a href="{% url 'deletebook' book.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this book?')">Delete</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+<div class="card" style="border: 1px solid black; margin: 20px;">
+    <div class="card-header">
+        <h3 class="mb-0">Book List</h3>
     </div>
-    <a href="{% url 'addbook' %}" class="btn btn-success btn-sm">Add Book</a>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr style="border: 1px solid black;">
+                    <th>Book Cover</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Price</th>
+                    <th>Category</th>
+                    <th>Stock</th>
+                    <th>Featured</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                    <tr style="border-bottom: 1px solid black;">
+                        <td><img src="{{ book.cover_image.url }}" alt="{{ book.title }}" style="max-width: 100px;"></td>
+                        <td>{{ book.title }}</td>
+                        <td>{{ book.author }}</td>
+                        <td>${{ book.price }}</td>
+                        <td>{{ book.category }}</td>
+                        <td>{{ book.stock }}</td>
+                        <td>{% if book.featured %}Yes{% else %}No{% endif %}</td>
+                        <td>
+                            <a href="{% url 'editbook' book.id %}" class="btn btn-primary btn-sm">Edit</a>
+                            <a href="{% url 'deletebook' book.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this book?')">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div style="text-align: right; margin-right: 20px; margin-bottom: 10px;">
+        <a href="{% url 'addbook' %}" class="btn btn-success btn-sm">Add Book</a>
+    </div>
+</div>
 {% endblock body %}
-

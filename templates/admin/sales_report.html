@@ -32,15 +32,15 @@
                 </tr>
             </thead>
             <tbody>
-                {% for order in orders %}
+                {% for item in order_items %}
                 <tr>
-                    <td style="font-weight: 600;text-align: center;">{{ order.order_id }}</td>
-                    <td>{{ order.order_date|date:"F j, Y" }}</td>
-                    <td>{{ order.book }}</td>
-                    <td>{{ order.quantity }}</td>
-                    <td>${{ order.price }}</td>
-                    <td>{{ order.discount }}%</td>
-                    <td>${{ order.total }}</td>
+                    <td style="font-weight: 600;text-align: center;">{{ item.order.id }}</td>
+                    <td>{{ item.order.order_date|date:"F j, Y" }}</td>
+                    <td>{{ item.book.title }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>${{ item.book.price }}</td>
+                    <td>{{ 0 }}%</td>
+                    <td>${{ item.order.total_amount }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -58,15 +58,15 @@
         function exportToExcel() {
             const data = [
                 ['Order ID', 'Order Date', 'Book', 'Quantity', 'Price', 'Discount', 'Total'],
-                {% for order in orders %}
+                {% for item in order_items %}
                 [
-                    {{ order.order_id }},
-                    '{{ order.order_date }}',
-                    '{{ order.book }}',
-                    {{ order.quantity }},
-                    {{ order.price }},
-                    {{ order.discount }},
-                    {{ order.total }}
+                    {{ item.order.id }},
+                    '{{ item.order.order_date|date:"F j, Y" }}',
+                    '{{ item.book.title }}',
+                    {{ item.quantity }},
+                    {{ item.book.price }},
+                    {{ 0 }},
+                    {{ item.order.total_amount }}
                 ],
                 {% endfor %}
             ];

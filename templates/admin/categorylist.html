@@ -6,6 +6,36 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
 
+<style>
+  /* Add border styles to the table */
+  .table {
+    border: 1px solid #000000;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  th, td {
+    border: 1px solid #000000;
+    padding: 8px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f2f2f2;
+  }
+
+  /* Style the buttons */
+  .btn-primary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+</style>
+
 <div class="container">
     <section>
         <div class="row active_user_table">
@@ -25,8 +55,13 @@
                         <tr>
                             <td>{{ ctgry.name }}</td>
                             <td>
-                                <a href="{% url 'editcategory' ctgry.id %}"><i class="fas fa-pencil-alt"></i></a>
-                                <a href="{% url 'deletecategory' ctgry.id %}" style="margin-left: 15px;" onclick="confirmDelete('{{ ctgry.name }}', '{% url 'deletecategory' ctgry.id %}')"><i class="far fa-trash-alt"></i></a>
+                                <a href="{% url 'editcategory' ctgry.id %}" class="btn btn-primary">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a>
+                                <a href="{% url 'deletecategory' ctgry.id %}" class="btn btn-danger" style="margin-left: 15px;"
+                                   onclick="confirmDelete('{{ ctgry.name }}', '{% url 'deletecategory' ctgry.id %}')">
+                                    <i class="far fa-trash-alt"></i>
+                                </a>
                             </td>
                         </tr>
                         {% endfor %}
@@ -58,9 +93,6 @@
         })
     }
 </script>
-```
-
-
 
 {% endblock body %}
 

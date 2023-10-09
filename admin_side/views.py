@@ -82,6 +82,10 @@ def deletecategory(request,id):
         return redirect('admlogin')
     cat=Category.objects.get(id=id)
     cat.delete()
+    books = Book.objects.filter(category=None)
+    for book in books:
+        book.featured=False
+        book.save()
     return redirect('categorylist')
 
 
@@ -273,37 +277,54 @@ def delete_coupon(request, id):
 
 from django.shortcuts import render
 
+from django.db.models import Sum,Count
+from datetime import datetime, timedelta
+from django.db.models.functions import TruncDate
+
+from django.db.models.functions import TruncMonth
+
 def dashboard(request):
-    # Replace the following with your actual data retrieval logic
-    monthly_sales = [1000, 1500, 2000, 1800, 2200, 2500, 2800, 3000]
-    yearly_sales = [12000, 14500, 17500, 19800, 22000]
+    # Calculate the date range for the last 6 months
+    end_date = datetime.now()
+    start_date = end_date - timedelta(days=180)  # 6 months = 180 days
 
-    monthly_sales_total = sum(monthly_sales)
-    yearly_sales_total = sum(yearly_sales)
-    last_month_total = monthly_sales[-2] if len(monthly_sales) >= 2 else 0
-    last_year_total = yearly_sales[-2] if len(yearly_sales) >= 2 else 0
+    # Query orders within the last 6 months, aggregated by month
+    monthly_sales_data = (
+        Order.objects
+        .filter(order_date__range=(start_date, end_date))
+        .annotate(month=TruncMonth('order_date'))  # Use TruncMonth to group by month
+        .values('month')
+        .annotate(total_sales=Sum('total_amount'))
+        .order_by('month')  # Ensure the results are ordered by month
+    )
 
-    if last_month_total > 0:
-        monthly_change_percentage = ((monthly_sales[-1] - last_month_total) / last_month_total) * 100
-    else:
-        monthly_change_percentage = 0
+    # Query order items count within the last 6 months, aggregated by month
+    monthly_sales_count_data = (
+        OrderItem.objects
+        .filter(order__order_date__range=(start_date, end_date))
+        .annotate(month=TruncMonth('order__order_date'))  # Use TruncMonth to group by month
+        .values('month')
+        .annotate(total_count=Count('id'))
+        .order_by('month')  # Ensure the results are ordered by month
+    )
 
-    if last_year_total > 0:
-        yearly_change_percentage = ((yearly_sales[-1] - last_year_total) / last_year_total) * 100
-    else:
-        yearly_change_percentage = 0
+    # Extract the month names and corresponding total sales amounts
+    months = [entry['month'].strftime('%B %Y') for entry in monthly_sales_data]
+    total_sales = [entry['total_sales'] for entry in monthly_sales_data]
+
+    # Extract the month names and corresponding total sales counts
+    counts = [entry['total_count'] for entry in monthly_sales_count_data]
 
     context = {
-        'monthly_sales': monthly_sales,
-        'yearly_sales': yearly_sales,
-        'monthly_sales_total': monthly_sales_total,
-        'yearly_sales_total': yearly_sales_total,
-        'monthly_change_percentage': monthly_change_percentage,
-        'yearly_change_percentage': yearly_change_percentage,
+        'months': months,
+        'total_sales': total_sales,
+        'counts': counts,  # Add the counts data to the context
     }
 
-
     return render(request, 'admin/dashboard.html', context)
+
+
+
 
 
 # Sample book titles
@@ -327,30 +348,13 @@ def sales_report(request):
     start_date = datetime.strptime(start_date_str, '%Y-%m-%d') if start_date_str else date.today() - timedelta(days=365)
     end_date = datetime.strptime(end_date_str, '%Y-%m-%d') if end_date_str else date.today()
 
-    # Generate sample order data for the specified date range
-    orders = []
-    for order_id in range(1, 30):  # Adding an order_id field
-        order_date = start_date + timedelta(days=random.randint(0, (end_date - start_date).days))
-        book = random.choice(list(books_and_prices.keys()))  # Choose a book title randomly
-        quantity = random.randint(1, 10)
-        price = books_and_prices[book]  # Retrieve the price for the chosen book
-        discount = random.choice([0, 10, 20])  # Adding a discount field
-        total = quantity * price * (1 - discount / 100)  # Calculate total after applying discount
-        orders.append({
-            'order_id': order_id,
-            'order_date': order_date,
-            'book': book,
-            'quantity': quantity,
-            'price': price,
-            'discount': discount,
-            'total': int(total),  # Convert total to an integer to remove decimal values
-        })
-
-    # Sort orders by order date
-    orders.sort(key=lambda x: x['order_date'])
+    # Query the OrderItem model to get relevant data
+    order_items = OrderItem.objects.filter(
+        order__order_date__range=(start_date, end_date)
+    ).select_related('order', 'book')
 
     context = {
-        'orders': orders,
+        'order_items': order_items,
         'start_date': start_date,
         'end_date': end_date,
     }

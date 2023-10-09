@@ -2,6 +2,7 @@ from django.db import models
 from accounts.models import user_details
 from admin_side.models import Book,order_status
 from datetime import datetime
+from django.utils import timezone
 # Create your models here.
 class Address(models.Model):
     user = models.ForeignKey(user_details, on_delete=models.CASCADE)
@@ -56,4 +57,19 @@ class wallet(models.Model):
 #     discount =models.DecimalField(max_digits=10, decimal_places=2, default=0)
 #     def __str__(self):
 #         return f"wallet for {self.user.username}"  
-  
+
+class wishlist(models.Model):
+    user = models.ForeignKey(user_details, on_delete=models.CASCADE)
+    item = models.ForeignKey(Book, on_delete=models.CASCADE)
+    
+class Review(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    user = models.ForeignKey(user_details, on_delete=models.CASCADE)
+    rating = models.PositiveIntegerField(choices=((1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5')))
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Review for {self.order_item.book.title} by {self.user.username}"
+    
+    

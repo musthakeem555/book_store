@@ -70,8 +70,8 @@
 
 				  <div>
 					<div class="d-inline-flex">
-						<div class="p-2"><a href="/favorite" style="color: black;"><i class="zmdi zmdi-favorite" style="font-size: 25px;"></i></a></div>
-						<div class="p-2"><a href="/cart" style="color: black;"><i class="zmdi zmdi-shopping-cart" style="font-size: 25px;"></i></a></div>
+						<div class="p-2"><a href="/wishlist" style="color: black;"><i class="zmdi zmdi-favorite" style="font-size: 25px;"></i></a></div>
+						<div class="p-2"><a href="/cart" style="color: black;"><i class="zmdi zmdi-shopping-cart" style="font-size: 25px;"></i></a><span id="cart-item-count">0</span></div>
 						<div class="p-2"><a href="/profile" style="color: black;"><i class="zmdi zmdi-account" style="font-size: 25px;"></i></a></div>
 					</div>
 					
@@ -135,7 +135,7 @@
 	<div class="container"> </div>
 		
 
-	{% block content %}{% endblock  %}
+	{% block content %}{% endblock %}
 
 
 	<!-- Footer -->
@@ -150,25 +150,25 @@
 					<ul>
 						<li class="p-b-10">
 							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Women
+								Noval
 							</a>
 						</li>
 
 						<li class="p-b-10">
 							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Men
+								Fiction
 							</a>
 						</li>
 
 						<li class="p-b-10">
 							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Shoes
+								Poetry
 							</a>
 						</li>
 
 						<li class="p-b-10">
 							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Watches
+								Biography
 							</a>
 						</li>
 					</ul>
@@ -211,9 +211,6 @@
 						GET IN TOUCH
 					</h4>
 
-					<p class="stext-107 cl7 size-201">
-						Any questions? Let us know in store at 8th floor, 379 Hudson St, New York, NY 10018 or call us on (+1) 96 716 6879
-					</p>
 
 					<div class="p-t-27">
 						<a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
@@ -256,12 +253,6 @@
 					</a>
 				</div>
 
-				<p class="stext-107 cl6 txt-center">
-					<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | Made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a> &amp; distributed by <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
-<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-
-				</p>
 			</div>
 		</div>
 	</footer>
@@ -328,40 +319,10 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 					
 					<div class="col-md-6 col-lg-5 p-b-30">
 						<div class="p-r-50 p-t-5 p-lr-0-lg">
-							<h4 class="mtext-105 cl2 js-name-detail p-b-14">
-								Lightweight Jacket
-							</h4>
-
-							<span class="mtext-106 cl2">
-								$58.79
-							</span>
-
-							<p class="stext-102 cl3 p-t-23">
-								Nulla eget sem vitae eros pharetra viverra. Nam vitae luctus ligula. Mauris consequat ornare feugiat.
-							</p>
 							
 							<!--  -->
 							<div class="p-t-33">
-								<div class="flex-w flex-r-m p-b-10">
-									<div class="size-203 flex-c-m respon6">
-										Size
-									</div>
 
-									<div class="size-204 respon6-next">
-										<div class="rs1-select2 bor8 bg0">
-											<select class="js-select2" name="time">
-												<option>Choose an option</option>
-												<option>Size S</option>
-												<option>Size M</option>
-												<option>Size L</option>
-												<option>Size XL</option>
-											</select>
-											<div class="dropDownSelect2"></div>
-										</div>
-									</div>
-								</div>
-
-								
 
 								<div class="flex-w flex-r-m p-b-10">
 									<div class="size-204 flex-w flex-m respon6-next">
@@ -421,6 +382,29 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	<script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
 <!--===============================================================================================-->
 	<script src="{% static 'vendor/select2/select2.min.js' %}"></script>
+	<script>
+		$(document).ready(function(){
+			// Function to update the cart item count
+			function updateCartItemCount() {
+				$.ajax({
+					url: "{% url 'cart_item_count' %}",
+					method: "GET",
+					dataType: "json",
+					success: function(data) {
+						var cartItemCount = data.cart_item_count;
+						// Update the UI to display the cart item count
+						$("#cart-item-count").text(cartItemCount);
+					},
+					error: function() {
+						console.error("Error fetching cart item count.");
+					}
+				});
+			}
+	
+			// Call the updateCartItemCount function initially
+			updateCartItemCount();
+		})
+	</script>
 	<script>
 		
 		$(".js-select2").each(function(){

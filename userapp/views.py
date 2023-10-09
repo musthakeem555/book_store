@@ -8,7 +8,7 @@ from admin_side.models import Book,order_status,Coupon
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from .models import Cart, CartItem ,Order,Address,OrderItem
+from .models import Cart, CartItem ,Order,Address,OrderItem,wishlist,Review
 from admin_side.models import Book,Coupon
 import razorpay
 from django.conf import settings
@@ -42,8 +42,9 @@ def book_list(request):
     sort_field = sort_mapping.get(sort_criteria, 'id')
 
     # Query the books and apply sorting
-    books = Book.objects.all().order_by(sort_field)
+    books = Book.objects.filter(featured=True).order_by(sort_field)
     categories = Category.objects.all()
+
     # Apply category filtering if a category is selected
     if category_filter:
         books = books.filter(category=category_filter)
@@ -51,8 +52,8 @@ def book_list(request):
     context = {
         'books': books,
         'sort_criteria': sort_criteria,
-        'selected_category': category_filter,  # Pass the selected category to the template
-        'categories': categories
+        'selected_category': category_filter,
+        'categories': categories,
     }
 
     return render(request, 'user/booklist.html', context)
@@ -79,8 +80,45 @@ def search(request):
 
 
 def book_detail(request, book_id):
-    book = get_object_or_404(Book, pk=book_id)
-    return render(request, 'user/bookdetail.html', {'book': book})
+    book = get_object_or_404(Book, id=book_id)
+    can_write_review = False  # Initialize the flag as False
+
+    # Check if the user is logged in
+    if request.user.is_authenticated:
+        # Check if the user has ordered this book and it's been delivered
+        ordered_book = OrderItem.objects.filter(
+            order__user=request.user,
+            book=book,
+            order_status=5
+        )
+
+        if ordered_book:
+            can_write_review = True  # Set the flag to True
+
+    # Query the reviews associated with the book
+    reviews = Review.objects.filter(book=book)
+
+    context = {
+        'book': book,
+        'can_write_review': can_write_review,
+        'reviews': reviews,  # Pass the reviews to the template
+    }
+
+    return render(request, 'user/bookdetail.html', context)
+
+def add_review(request, order_item_id):
+    if request.method == 'POST':
+        book = get_object_or_404(Book, id=order_item_id)
+        user = request.user
+        rating = request.POST['rating']
+        comment = request.POST['comment']
+
+        # Check if the user has ordered and received this book
+
+    Review.objects.create(book=book, user=user, rating=rating, comment=comment)
+
+            # Redirect back to the book detail page or another appropriate page
+    return redirect('book_detail', book_id=order_item_id)
 
 def catgry_search(request,id):
     books=Book.objects.filter(Category=id)
@@ -222,7 +260,17 @@ def delete_cart_item(request, cart_item_id):
     
     return JsonResponse({'message': 'Invalid request.'}, status=400)
 
-
+def cart_item_count(request):
+    if request.user.is_authenticated:
+        user_cart = Cart.objects.get(user=request.user)
+        if user_cart:
+            cart_item_count = CartItem.objects.filter(cart=user_cart).count()
+        else:
+            cart_item_count = 0
+    else:
+        cart_item_count = 0
+    
+    return JsonResponse({'cart_item_count': cart_item_count})
 
 def checkout(request):
     if request.method == 'POST':
@@ -530,6 +578,74 @@ def cancel_order(request, order_id):
         messages.error(request, 'Order item not found.')
 
     return redirect('my_orders')  # Redirect to the order items page
+
+@login_required
+def add_to_wishlist(request, book_id):
+    try:
+        # Get the book
+        book = get_object_or_404(Book, id=book_id)
+
+        # Check if the book is already in the user's wishlist
+        existing_wishlist_item = wishlist.objects.filter(user=request.user, item=book).first()
+
+        if existing_wishlist_item:
+            # If the book is already in the wishlist, return a JsonResponse indicating it's not added again.
+            return JsonResponse({'success': False, 'error': 'Book already in wishlist'})
+        else:
+            # If the book is not in the wishlist, add it and return a success JsonResponse
+            wishlist.objects.create(user=request.user, item=book)
+            return JsonResponse({'success': True})
+    except Book.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Book not found'})
+
+def wishlist_temp(request):
+    # Check if the user is authenticated
+    if request.user.is_authenticated:
+        # Get the user's wishlist items
+        try:
+            user_wishlist = wishlist.objects.filter(user=request.user)
+
+            # Create an empty list to store wishlist item details
+            wishlist_items = []
+
+            # Iterate through each item in the wishlist
+            for item in user_wishlist:
+                # Assuming that 'item' is a ForeignKey to your 'Book' model
+                book = item.item  # Get the associated book
+                # Create a dictionary with book details
+                book_info = {
+                    'title': book.title,
+                    'price': book.price,
+                    'image_url': book.cover_image.url,
+                    'id': item.id
+                }
+                print(item.id)
+                wishlist_items.append(book_info)
+            return render(request, 'user/wishlist.html', {'wishlist_items': wishlist_items})
+        except:
+            messages.error(request, 'No items in your wishlist')
+            return render(request, 'user/wishlist.html')
+    else:
+        # Handle the case where the user is not authenticated
+        # You can redirect them to the login page or display a message
+        return render(request, 'user/not_authenticated.html')
+
+ 
+    
+def delete_list_item(request,id):
+    
+    item=wishlist.objects.get(id=id)
+    item.delete()   
+    return redirect('wishlist')
+
+
+
+
+
+
+
+
+
 
 
 

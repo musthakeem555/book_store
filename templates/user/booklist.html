@@ -139,22 +139,53 @@
                             </div>
 
                             <div class="block2-txt-child2 flex-r p-t-3">
-                                <a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
-                                    <img class="icon-heart1 dis-block trans-04"
-                                        src="{% static 'images/icons/icon-heart-01.png' %}" alt="ICON">
-                                    <img class="icon-heart2 dis-block trans-04 ab-t-l"
-                                        src="{% static 'images/icons/icon-heart-02.png' %}" alt="ICON">
-                                </a>
+                                <button class="btn-addwish-b2 dis-block pos-relative" id="js-add-to-wishlist" onclick="addToWishlist('{{ book.id }}')">
+                                    <img class="icon-heart1 dis-block trans-04" src="{% static 'images/icons/icon-heart-01.png' %}" alt="ICON">
+                                    <img class="icon-heart2 dis-block trans-04 ab-t-l" src="{% static 'images/icons/icon-heart-02.png' %}"  alt="ICON">
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
                 {% endfor %}
                 {% else %}
-                <div class="col-12" style="display: flex;justify-content: center;">
+                <div class="col-12" style="display: flex; justify-content: center;">
                     <p>No matching products found.</p>
                 </div>
                 {% endif %}
             </div>
         </div>
         {% endblock %}
+        {% block script %}
+        <script>
+
+            function addToWishlist(bookId){
+                console.log(bookId)
+                const url = "{% url 'add_to_wishlist' 0 %}".replace('0', bookId)
+                $.ajax({
+                    url: url, // Replace with the actual URL
+                    method: "GET",
+                    data: {
+                        book_id: bookId // Pass the book ID or any necessary data here
+                    },
+                    success: function(response) {
+                        if (response) {
+                            // Update the UI to indicate success
+                            alert("Book added to wishlist!");
+                        } else {
+                            // Handle any errors or show appropriate messages
+                            alert("Error adding book to wishlist.");
+                        }
+                    },
+                    error: function() {
+                        // Handle AJAX errors
+                        alert("Error adding book to wishlist.");
+                    }
+                });
+            }
+
+           
+        </script>
+            
+
+        {% endblock script %}
