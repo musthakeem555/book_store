@@ -1,7 +1,5 @@
 /* Add this CSS to adjust the footer width and remove the gap only in booklist.html */
 footer {
-    margin-left: -15px;
-    margin-right: -15px;
     padding-left: 15px;
     padding-right: 15px;
 }
